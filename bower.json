@@ -21,6 +21,6 @@
     "doc",
     "tests",
     "Gruntfile.js",
-    "examples",
+    "examples"
   ]
 }
