@@ -51,3 +51,6 @@ See [caniuse.com/canvas](http://caniuse.com/canvas)
 ## API
 
 The API is not yet finalized. Look at the code and expect changes.
+
+## License
+Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)
