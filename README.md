@@ -29,13 +29,21 @@ var result = SmartCrop.crop(image, {width: 100, height: 100}, function(result){c
 // {topCrop: {x: 300, y: 200, height: 200, width: 200}}
 ```
 
-# CLI / Node.js
+## Download/ Installation
+```npm install smartcrop```
+or
+```bower install smartcrop```
+or just download [smartcrop.js](https://raw.githubusercontent.com/jwagner/smartcrop.js/master/smartcrop.js) from the git repo.
+
+## CLI / Node.js
 The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js. It is based on node.js and node-canvas. You can also view it as an example on how to use smartcrop.js from a node.js app.
 
 ## Module Formats
 
-Smartcrop.js can be used as plain javascript in the browser, amd or commonjs module.
-It can be in a node environment using node-canvas. There are no dependencies.
+Supported:
+* common js
+* amd
+* global export / window
 
 ## Supported Browsers
 See [caniuse.com/canvas](http://caniuse.com/canvas)
