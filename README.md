@@ -5,9 +5,11 @@
 
 Smartcrop.js implements an algorithm to find good crops for images.
 
-![](http://29a.ch/sandbox/2014/smartcrop/doc/example.jpg)
+![Example](http://29a.ch/sandbox/2014/smartcrop/example.jpg)
+Image: [https://www.flickr.com/photos/endogamia/5682480447/](https://www.flickr.com/photos/endogamia/5682480447) by N. Feans
 
 It does this using fairly dumb image processing. In short:
+
 1. Find edges using laplace
 1. Find regions with a color like skin
 1. Find regions high in saturation
@@ -17,8 +19,8 @@ It does this using fairly dumb image processing. In short:
 1. Output the candidate crop with the highest rank
 
 ## Demos
-* [Test Suite]() containing over 100 images, **heavy**
-* [Testbed]() allows you to upload your own images
+* [Test Suite](http://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html) containing over 100 images, **heavy**
+* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html) allows you to upload your own images
 
 
 ## Simple Example
