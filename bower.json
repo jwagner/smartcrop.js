@@ -1,0 +1,26 @@
+{
+  "name": "smartcrop",
+  "main": "smartcrop.js",
+  "version": "0.0.0",
+  "authors": [
+    "Jonas Wagner <jonas@29a.ch>"
+  ],
+  "description": "Content aware image cropping",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jwagner/smartcrop.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "doc",
+    "tests",
+    "Gruntfile.js",
+    "examples",
+  ]
+}

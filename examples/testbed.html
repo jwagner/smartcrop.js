@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>smartcrop.js testbed</title>
+<link rel=stylesheet href=style.css>
+</head>
+<body>
+    <h1>smartcrop.js testbed</h1>
+
+    <p>smartcrop.js is a content aware image cropping library. On this page you can test it with your own images. You can learn more about the library on it's <a href="https://github.com/jwagner/smartcrop.js/">github page</a>.</p>
+    <div>
+    <form>
+        <label>Width<div><input name=width type="range" min=50 max=500 step=1 value=250 /><span class=value>250</span>px</div></label>
+        <label>Height<div><input name=height type="range" min=50 max=500 step=1 value=250 /><span class=value>250</span>px</div></label>
+    </form>
+    </div>
+    <h2>Drop images on this page to analyze them.</h2>
+    <canvas id="c"></canvas>
+    <div id=debug></div>
+    <script src=jquery.js></script>
+    <script src=underscore.js></script>
+    <script src="../smartcrop.js"></script>
+    <script src=testbed.js>
+    </script>
+</body>
+</html>

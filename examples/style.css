@@ -1,0 +1,14 @@
+html { width: 100%; }
+body {
+    font-family: sans-serif;
+    max-width: 1400px;
+    padding: 8px;
+    margin: auto;
+}
+p {
+    max-width: 900px;
+}
+input[type=range] {
+    width: 300px;
+}
+img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: auto; }
