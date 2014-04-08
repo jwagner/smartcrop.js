@@ -57,5 +57,11 @@ The API is not yet finalized. Look at the code and expect changes.
 You can run the tests using grunt test. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/. 
 The test coverage for smartcrop.js is very limited at the moment. I expect to improve this as the code matures and the concepts solidify.
 
+## Benchmark
+There are benchmarks for both the browser (test/benchmark.html) and node (node test/benchmark-node.js [requires node-canvas])
+both powered by [benchmark.js](http://benchmarkjs.com).
+
+If you just want some rough numbers: It takes < 100 ms to find a square crop of a 640x427 picture on an i7.
+
 ## License
 Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)

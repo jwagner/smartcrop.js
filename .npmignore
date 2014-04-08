@@ -1,0 +1,9 @@
+node_modules
+examples
+*.jpg
+*.html
+.500px-consumer-key
+my_*
+doc
+bower.json
+Gruntfile.js

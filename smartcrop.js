@@ -127,40 +127,22 @@ SmartCrop.prototype = {
         c.height = h;
         return c;
     },
-    saturation: function(r, g, b){
-        var maximum = max(r/255, g/255, b/255), minumum = min(r/255, g/255, b/255);
-        if(maximum === minumum){
-            return 0;
-        }
-        var l = (maximum + minumum) / 2,
-            d = maximum-minumum;
-        return l > 0.5 ? d/(2-maximum-minumum) : d/(maximum+minumum);
-    },
-    cie: function(r, g, b){
-        return 0.5126*b + 0.7152*g + 0.0722*r;
-    },
     edgeDetect: function(i, o){
         var id = i.data,
             od = o.data,
             w = i.width,
-            h = i.height,
-            cie = this.cie;
-        function sample(p) {
-            return cie(id[p], id[p+1], id[p+2]);
-        }
+            h = i.height;
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
                     lightness;
                 if(x === 0 || x >= w-1 || y === 0 || y >= h-1){
-                    lightness = sample(p);
+                    lightness = sample(id, p);
                 }
                 else {
-                    lightness = sample(p)*4 - sample(p-w*4) - sample(p-4) - sample(p+4) - sample(p+w*4);
+                    lightness = sample(id, p)*4 - sample(id, p-w*4) - sample(id, p-4) - sample(id, p+4) - sample(id, p+w*4);
                 }
-                od[p] = lightness;
                 od[p+1] = lightness;
-                od[p+2] = lightness;
             }
         }
     },
@@ -173,7 +155,7 @@ SmartCrop.prototype = {
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
-                    lightness = this.cie(id[p], id[p+1], id[p+2])/255,
+                    lightness = cie(id[p], id[p+1], id[p+2])/255,
                     skin = this.skinColor(id[p], id[p+1], id[p+2]);
                 if(skin > options.skinThreshold && lightness >= options.skinBrightnessMin && lightness <= options.skinBrightnessMax){
                     od[p] = (skin-options.skinThreshold)*(255/(1-options.skinThreshold));
@@ -195,10 +177,10 @@ SmartCrop.prototype = {
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
-                    lightness = this.cie(id[p], id[p+1], id[p+2])/255,
-                    saturation = this.saturation(id[p], id[p+1], id[p+2]);
-                if(saturation > options.saturationThreshold && lightness >= options.saturationBrightnessMin && lightness <= options.saturationBrightnessMax){
-                    od[p+2] = (saturation-options.saturationThreshold)*(255/(1-options.saturationThreshold));
+                    lightness = cie(id[p], id[p+1], id[p+2])/255,
+                    sat = saturation(id[p], id[p+1], id[p+2]);
+                if(sat > options.saturationThreshold && lightness >= options.saturationBrightnessMin && lightness <= options.saturationBrightnessMax){
+                    od[p+2] = (sat-options.saturationThreshold)*(255/(1-options.saturationThreshold));
                 }
                 else {
                     od[p+2] = 0;
@@ -393,9 +375,7 @@ function extend(o){
         var arg = arguments[i];
         if(arg){
             for(var name in arg){
-                if(arg.hasOwnProperty(name)){
-                    o[name] = arg[name];
-                }
+                o[name] = arg[name];
             }
         }
     }
@@ -408,6 +388,24 @@ function thirds(x){
     x = ((x-(1/3)+1.0)%2.0*0.5-0.5)*16;
     return Math.max(1.0-x*x, 0.0);
 }
+
+function cie(r, g, b){
+    return 0.5126*b + 0.7152*g + 0.0722*r;
+}
+function sample(id, p) {
+    return cie(id[p], id[p+1], id[p+2]);
+}
+function saturation(r, g, b){
+    var maximum = max(r/255, g/255, b/255), minumum = min(r/255, g/255, b/255);
+    if(maximum === minumum){
+        return 0;
+    }
+    var l = (maximum + minumum) / 2,
+        d = maximum-minumum;
+    return l > 0.5 ? d/(2-maximum-minumum) : d/(maximum+minumum);
+}
+
+
 
 
 
