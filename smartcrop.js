@@ -247,9 +247,10 @@ SmartCrop.prototype = {
             for(var x = 0; x < output.width; x++) {
                 var p = yoffset+x*4,
                     importance = this.importance(crop, x*downSample, ydownSample);
-                score.skin += od[p]/255*(od[p+1]/255+options.skinBias)*importance;
-                score.detail += od[p+1]/255*importance;
-                score.saturation += od[p+2]/255*(od[p+1]/255*1.0+options.saturationBias)*importance;
+                var g = od[p+1]/255;
+                score.skin += od[p]/255*(g+options.skinBias)*importance;
+                score.detail += g*importance;
+                score.saturation += od[p+2]/255*(g+options.saturationBias)*importance;
                 //if(Number.isNaN(score.detail)) debugger;
                 //if(Number.isNaN(score.saturation)) debugger;
                 //if(Number.isNaN(score.skin)) debugger;
