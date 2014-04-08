@@ -240,15 +240,17 @@ SmartCrop.prototype = {
             },
             options = this.options,
             od = output.data,
-            downSample = options.scoreDownSample,
-            invDownSample = 1/downSample;
-        for(var y = 0; y < output.height*downSample; y+=downSample) {
-            for(var x = 0; x < output.width*downSample; x+=downSample) {
-                var p = (~~(y*invDownSample)*output.width+~~(x*invDownSample))*4,
-                    importance = this.importance(crop, x, y);
-                score.skin += od[p]/255*(od[p+1]/255+options.skinBias)*importance;
-                score.detail += od[p+1]/255*importance;
-                score.saturation += od[p+2]/255*(od[p+1]/255*1.0+options.saturationBias)*importance;
+            downSample = options.scoreDownSample;
+        for(var y = 0; y < output.height; y++) {
+            var yoffset = y*output.width;
+            var ydownSample = y*downSample;
+            for(var x = 0; x < output.width; x++) {
+                var p = yoffset+x*4,
+                    importance = this.importance(crop, x*downSample, ydownSample);
+                var g = od[p+1]/255;
+                score.skin += od[p]/255*(g+options.skinBias)*importance;
+                score.detail += g*importance;
+                score.saturation += od[p+2]/255*(g+options.saturationBias)*importance;
                 //if(Number.isNaN(score.detail)) debugger;
                 //if(Number.isNaN(score.saturation)) debugger;
                 //if(Number.isNaN(score.skin)) debugger;
