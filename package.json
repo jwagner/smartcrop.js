@@ -9,7 +9,10 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-connect": "~0.7.1",
     "500px": "~0.3.2",
-    "grunt-rsync": "~0.5.0"
+    "grunt-rsync": "~0.5.0",
+    "grunt": "^0.4.4",
+    "mocha": "^1.18.2",
+    "chai": "^1.9.1"
   },
   "license": "MIT",
   "repository": {

@@ -19,7 +19,7 @@ grunt.initConfig({
             livereload: true
         },
         'static': {
-            files: ['smartcrop.js', 'examples/*'],
+            files: ['smartcrop.js', 'examples/*', 'test/*'],
             options: {
                 livereload: true
             }
@@ -38,8 +38,12 @@ grunt.initConfig({
                 dryRun: false
             }
         }
+    },
+    karma: {
+        unit: {
+            configFile: 'karma.conf.js'
+        }
     }
-
 });
 grunt.registerTask('default', ['connect', 'watch']);
 grunt.registerTask('fetchSamples', 'fetch sample images from 500px api', function(){

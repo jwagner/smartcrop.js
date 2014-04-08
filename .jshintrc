@@ -1,0 +1,33 @@
+{
+    "predef": [
+        "define",
+        "exports",
+        "module",
+        "describe",
+        "beforeEach",
+        "it",
+        "expect",
+        "SmartCrop",
+        "console"
+    ],
+    "globalstrict": false,
+    "browser" : true,
+    "jquery" : true,
+    "boss" : true,
+    "eqeqeq": false,
+    "evil": false,
+    "eqnull": true,
+    "forin": false,
+    "laxbreak": false,
+    "newcap": false,
+    "noarg": true,
+    "noempty": false,
+    "nonew": false,
+    "nomen": false,
+    "plusplus": false,
+    "regexp": false,
+    "undef": false,
+    "sub": true,
+    "strict": false,
+    "white": false
+}

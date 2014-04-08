@@ -23,10 +23,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// TODO: Penalty for detail/skin outside of viewport, reduce edge!
-
-
 (function(){
+"use strict";
 
 function SmartCrop(options){
    this.options = extend({}, SmartCrop.DEFAULTS, options);
@@ -65,7 +63,7 @@ SmartCrop.DEFAULTS = {
 };
 SmartCrop.crop = function(image, options, callback){
     if(options.aspect){
-        options.width = aspect;
+        options.width = options.aspect;
         options.height = 1;
     }
 
@@ -175,7 +173,7 @@ SmartCrop.prototype = {
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
-                    lightness = this.cie(id[p], id[p+1], id[p+2])/255;
+                    lightness = this.cie(id[p], id[p+1], id[p+2])/255,
                     skin = this.skinColor(id[p], id[p+1], id[p+2]);
                 if(skin > options.skinThreshold && lightness >= options.skinBrightnessMin && lightness <= options.skinBrightnessMax){
                     od[p] = (skin-options.skinThreshold)*(255/(1-options.skinThreshold));
@@ -197,7 +195,7 @@ SmartCrop.prototype = {
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
-                    lightness = this.cie(id[p], id[p+1], id[p+2])/255;
+                    lightness = this.cie(id[p], id[p+1], id[p+2])/255,
                     saturation = this.saturation(id[p], id[p+1], id[p+2]);
                 if(saturation > options.saturationThreshold && lightness >= options.saturationBrightnessMin && lightness <= options.saturationBrightnessMax){
                     od[p+2] = (saturation-options.saturationThreshold)*(255/(1-options.saturationThreshold));
@@ -339,7 +337,7 @@ SmartCrop.prototype = {
             topCrop = null,
             crops = this.crops(image);
 
-        for(i = 0, i_len = crops.length; i < i_len; i++) {
+        for(var i = 0, i_len = crops.length; i < i_len; i++) {
             var crop = crops[i];
             crop.score = this.score(scoreOutput, crop);
             if(crop.score.total > topScore){
@@ -419,7 +417,7 @@ if (typeof define !== 'undefined' && define.amd) define(function(){return SmartC
 //common js
 if (typeof exports !== 'undefined') exports.SmartCrop = SmartCrop;
 // browser
-else if (typeof navigator !== 'undefined') this.SmartCrop = SmartCrop;
+else if (typeof navigator !== 'undefined') window.SmartCrop = SmartCrop;
 // nodejs
 if (typeof module !== 'undefined') {
     module.exports = SmartCrop;
