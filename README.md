@@ -52,5 +52,10 @@ See [caniuse.com/canvas](http://caniuse.com/canvas)
 
 The API is not yet finalized. Look at the code and expect changes.
 
+## Tests
+
+You can run the tests using grunt test. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/. 
+The test coverage for smartcrop.js is very limited at the moment. I expect to improve this as the code matures and the concepts solidify.
+
 ## License
 Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)

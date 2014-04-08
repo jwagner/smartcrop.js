@@ -1,16 +1,23 @@
 module.exports = function(grunt) {
 grunt.initConfig({
     connect: {
+        options: {
+            //useAvailablePort: true,
+            port: 8000,
+            hostname: '*',
+            base: '.',
+            //keepalive: true,
+            livereload: true
+            //debug: true,
+        },
         server: {
             options: {
-                //useAvailablePort: true,
-                port: 8000,
-                hostname: '*',
-                base: '.',
-                //keepalive: true,
-                livereload: true,
-                //debug: true,
                 open: 'http://localhost:8000/examples/testsuite.html'
+            }
+        },
+        test: {
+            options: {
+                open: 'http://localhost:8000/test/'
             }
         }
     },
@@ -45,7 +52,8 @@ grunt.initConfig({
         }
     }
 });
-grunt.registerTask('default', ['connect', 'watch']);
+grunt.registerTask('default', ['connect:server', 'watch']);
+grunt.registerTask('test', ['connect:test', 'watch']);
 grunt.registerTask('fetchSamples', 'fetch sample images from 500px api', function(){
     var done = this.async(),
         API500px = require('500px').API500px,
