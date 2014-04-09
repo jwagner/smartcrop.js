@@ -221,10 +221,13 @@ SmartCrop.prototype = {
             options = this.options,
             od = output.data,
             downSample = options.scoreDownSample,
-            invDownSample = 1/downSample;
-        for(var y = 0; y < output.height*downSample; y+=downSample) {
-            for(var x = 0; x < output.width*downSample; x+=downSample) {
-                var p = (~~(y*invDownSample)*output.width+~~(x*invDownSample))*4,
+            invDownSample = 1/downSample,
+            outputHeightDownSample = output.height*downSample,
+            outputWidthDownSample = output.width*downSample,
+            outputWidth = output.width;
+        for(var y = 0; y < outputHeightDownSample; y+=downSample) {
+            for(var x = 0; x < outputWidthDownSample; x+=downSample) {
+                var p = (~~(y*invDownSample)*outputWidth+~~(x*invDownSample))*4,
                     importance = this.importance(crop, x, y);
                 score.skin += od[p]/255*(od[p+1]/255+options.skinBias)*importance;
                 score.detail += od[p+1]/255*importance;
@@ -240,33 +243,33 @@ SmartCrop.prototype = {
         //console.log(score);
         return score;
     },
-    _score: function(output, crop){
-        var score = {
-                detail: 0,
-                saturation: 0,
-                skin: 0,
-                total: 0
-            },
-            options = this.options,
-            downSample = options.scoreDownSample,
-            invDownSample = 1/downSample;
-        for(var y = crop.y; y < crop.y+crop.height; y+=downSample) {
-            for(var x = crop.x; x < crop.x+crop.width; x+=downSample) {
-                var p = (~~(y*invDownSample)*output.width+~~(x*invDownSample))*4;
-                score.detail += output.data[p+1]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                score.saturation += output.data[p+2]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                score.skin += output.data[p]/255*(output.data[p+1]/255+options.skinBias)*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                //if(Number.isNaN(score.detail)) debugger;
-                //if(Number.isNaN(score.saturation)) debugger;
-                //if(Number.isNaN(score.skin)) debugger;
-                //if(Number.isNaN(score.total)) debugger;
-            }
+    //_score: function(output, crop){
+        //var score = {
+                //detail: 0,
+                //saturation: 0,
+                //skin: 0,
+                //total: 0
+            //},
+            //options = this.options,
+            //downSample = options.scoreDownSample,
+            //invDownSample = 1/downSample;
+        //for(var y = crop.y; y < crop.y+crop.height; y+=downSample) {
+            //for(var x = crop.x; x < crop.x+crop.width; x+=downSample) {
+                //var p = (~~(y*invDownSample)*output.width+~~(x*invDownSample))*4;
+                //score.detail += output.data[p+1]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
+                //score.saturation += output.data[p+2]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
+                //score.skin += output.data[p]/255*(output.data[p+1]/255+options.skinBias)*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
+                ////if(Number.isNaN(score.detail)) debugger;
+                ////if(Number.isNaN(score.saturation)) debugger;
+                ////if(Number.isNaN(score.skin)) debugger;
+                ////if(Number.isNaN(score.total)) debugger;
+            //}
 
-        }
-        score.total = (score.detail*options.detailWeight + score.skin*options.skinWeight + score.saturation*options.saturationWeight)/crop.width/crop.height;
-        //console.log(score);
-        return score;
-    },
+        //}
+        //score.total = (score.detail*options.detailWeight + score.skin*options.skinWeight + score.saturation*options.saturationWeight)/crop.width/crop.height;
+        ////console.log(score);
+        //return score;
+    //},
 
     importance: function(crop, x, y){
         var options = this.options;
