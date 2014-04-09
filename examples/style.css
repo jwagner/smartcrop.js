@@ -12,3 +12,14 @@ input[type=range] {
     width: 300px;
 }
 img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: auto; }
+
+.output {
+    width: 75%;
+    float: left;
+}
+.sidebar {
+    width: 25%;
+    float: left;
+    height: 600px;
+    overflow: auto;
+}

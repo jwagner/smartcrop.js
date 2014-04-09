@@ -109,10 +109,10 @@ SmartCrop.crop = function(image, options, callback){
     var result = smartCrop.analyse(image);
     for(var i = 0, i_len = result.crops.length; i < i_len; i++) {
         var crop = result.crops[i];
-        crop.x /= prescale;
-        crop.y /= prescale;
-        crop.width /= prescale;
-        crop.height /= prescale;
+        crop.x = ~~(crop.x/prescale);
+        crop.y = ~~(crop.y/prescale);
+        crop.width = ~~(crop.width/prescale);
+        crop.height = ~~(crop.height/prescale);
     }
     callback(result);
     return result;
