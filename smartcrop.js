@@ -88,7 +88,6 @@ SmartCrop.crop = function(image, options, callback){
         // -> don't pick crops that need upscaling
         options.minScale = min(options.maxScale || SmartCrop.DEFAULTS.maxScale, max(1/scale, (options.minScale||SmartCrop.DEFAULTS.minScale)));
     }
-    //console.log(options);
     var smartCrop = new SmartCrop(options);
     if(options.width && options.height) {
         if(options.prescale !== false){
@@ -163,8 +162,6 @@ SmartCrop.prototype = {
                 else {
                     od[p] = 0;
                 }
-                //od[p] = lightness;
-                //od[p+2] = lightness;
             }
         }
     },
@@ -185,7 +182,6 @@ SmartCrop.prototype = {
                 else {
                     od[p+2] = 0;
                 }
-                //od[p+2] = saturation > options.saturation ? 255 : saturation*127;
             }
         }
     },
@@ -233,45 +229,12 @@ SmartCrop.prototype = {
                 score.skin += od[p]/255*(detail+options.skinBias)*importance;
                 score.detail += detail*importance;
                 score.saturation += od[p+2]/255*(detail+options.saturationBias)*importance;
-                //if(Number.isNaN(score.detail)) debugger;
-                //if(Number.isNaN(score.saturation)) debugger;
-                //if(Number.isNaN(score.skin)) debugger;
-                //if(Number.isNaN(score.total)) debugger;
             }
 
         }
         score.total = (score.detail*options.detailWeight + score.skin*options.skinWeight + score.saturation*options.saturationWeight)/crop.width/crop.height;
-        //console.log(score);
         return score;
     },
-    //_score: function(output, crop){
-        //var score = {
-                //detail: 0,
-                //saturation: 0,
-                //skin: 0,
-                //total: 0
-            //},
-            //options = this.options,
-            //downSample = options.scoreDownSample,
-            //invDownSample = 1/downSample;
-        //for(var y = crop.y; y < crop.y+crop.height; y+=downSample) {
-            //for(var x = crop.x; x < crop.x+crop.width; x+=downSample) {
-                //var p = (~~(y*invDownSample)*output.width+~~(x*invDownSample))*4;
-                //score.detail += output.data[p+1]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                //score.saturation += output.data[p+2]/255*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                //score.skin += output.data[p]/255*(output.data[p+1]/255+options.skinBias)*this.importance((x-crop.x)/crop.width, (y-crop.y)/crop.height);
-                ////if(Number.isNaN(score.detail)) debugger;
-                ////if(Number.isNaN(score.saturation)) debugger;
-                ////if(Number.isNaN(score.skin)) debugger;
-                ////if(Number.isNaN(score.total)) debugger;
-            //}
-
-        //}
-        //score.total = (score.detail*options.detailWeight + score.skin*options.skinWeight + score.saturation*options.saturationWeight)/crop.width/crop.height;
-        ////console.log(score);
-        //return score;
-    //},
-
     importance: function(crop, x, y){
         var options = this.options;
 
@@ -333,7 +296,6 @@ SmartCrop.prototype = {
             
         }
 
-        //console.log(crops);
         result.crops = crops;
         result.topCrop = topCrop;
 
@@ -352,8 +314,6 @@ SmartCrop.prototype = {
                         if(importance < 0) {
                             output.data[p] += importance*-64;
                         }
-                        //output.data[p+1] = this.skinColor(input.data[p], input.data[p+1], input.data[p+2], options)*255;
-                        //output.data[p+2] = 0;
                         output.data[p+3] = 255;
                     }
                 }
