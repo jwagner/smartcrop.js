@@ -62,6 +62,15 @@ There are benchmarks for both the browser (test/benchmark.html) and node (node t
 both powered by [benchmark.js](http://benchmarkjs.com).
 
 If you just want some rough numbers: It takes **< 100 ms** to find a **square crop** of a **640x427px** picture on an i7.
+In other words, it's fine to run it on one image, it's not cool to run it on an entire gallery on page load.
+
+## Contributors
+
+* [Christian Muelhaeuser](https://github.com/muesli)
+
+## Ports, Alternatives
+
+* [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muelhaeuser](https://github.com/muesli)
 
 ## License
 Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)
