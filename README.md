@@ -1,7 +1,6 @@
 # smartcrop.js
 
-**WARNING: This is a work in progress. Neither the API nor the algorithm are finished.
-(Automated) verification, testing and benchmarking are yet to be done.**
+**:warning: This is a work in progress. Neither the API nor the algorithm are finished or battle proofen.**
 
 Smartcrop.js implements an algorithm to find good crops for images.
 
