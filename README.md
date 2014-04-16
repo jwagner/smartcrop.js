@@ -50,7 +50,45 @@ See [caniuse.com/canvas](http://caniuse.com/canvas)
 
 ## API
 
-The API is not yet finalized. Look at the code and expect changes.
+The API is not yet finalized. Look at the code for details and expect changes.
+
+### SmartCrop.crop(image, options, callback)
+Crop image using options and call callback(result) when done.
+
+**image:** anything ctx.drawImage() accepts, usually HTMLImageElement, HTMLCanvasElement or HTMLVideoElement
+
+**options:** see cropOptions
+
+**callback:** function(cropResult)
+
+### cropOptions
+
+**debug:** if true, cropResults will contain a debugCanvas
+
+**minScale:** minimal scale of the crop rect, set to 1.0 to prevent smaller than necessary crops (lowers the risk of chopping things off).
+
+**width:** width of the crop you want to use. 
+
+**height:** height of the crop you want to use.
+
+There are many more (for now undocumented) options available. Check the [source](smartcrop.js#L32) and know that they might change in the future.
+
+### cropResult
+```javascript
+{
+  topCrop: crop,
+  crops: [crop]
+}
+```
+### crop
+```javascript
+{
+  x: 1,
+  y: 1,
+  width: 1,
+  height: 1
+}
+```
 
 ## Tests
 
