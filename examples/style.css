@@ -8,6 +8,9 @@ body {
 p {
     max-width: 900px;
 }
+input[type=file] {
+    display: block;
+}
 input[type=range] {
     width: 300px;
 }

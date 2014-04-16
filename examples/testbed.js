@@ -7,19 +7,26 @@ $('html')
     .on('dragover', function(e) {e.preventDefault(); return false;})
     .on('drop', function(e) {
         var files = e.originalEvent.dataTransfer.files;
-        if (files.length > 0) {
-            var file = files[0];
-            if (typeof FileReader !== "undefined" && file.type.indexOf("image") != -1) {
-                var reader = new FileReader();
-                // Note: addEventListener doesn't work in Google Chrome for this event
-                reader.onload = function (evt) {
-                    load(evt.target.result);
-                 };
-                reader.readAsDataURL(file);
-            }
-        }
+        handleFiles(files);
         return false;
     });
+$('input[type=file]').change(function(e) { handleFiles(this.files); } );
+
+function handleFiles(files){
+    if (files.length > 0) {
+        var file = files[0];
+        if (typeof FileReader !== "undefined" && file.type.indexOf("image") != -1) {
+            var reader = new FileReader();
+            // Note: addEventListener doesn't work in Google Chrome for this event
+            reader.onload = function (evt) {
+                load(evt.target.result);
+             };
+            reader.readAsDataURL(file);
+        }
+    }
+}
+
+
 load('images/flickr/kitty.jpg');
 $('input[type=range]').change(_.debounce(function(){
     $(this).next('.value').text($(this).val());
