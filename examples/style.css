@@ -1,4 +1,4 @@
-html { width: 100%; }
+html { width: 100%; min-height: 100%; }
 body {
     font-family: sans-serif;
     max-width: 1400px;
