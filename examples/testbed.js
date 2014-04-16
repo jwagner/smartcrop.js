@@ -35,11 +35,16 @@ function load(src){
 }
 function analyze(){
     if(!img) return;
-    SmartCrop.crop(img, {width: form.width.value, height: form.height.value, debug: true}, draw);
+    SmartCrop.crop(img, {
+        width: form.width.value*1,
+        height: form.height.value*1,
+        minScale: form.minScale.value*1,
+        debug: true
+    }, draw);
 }
 function draw(result){
     selectedCrop = result.topCrop;
-    $('.crops').append(_.sortBy(result.crops, function(c){return -c.score.total;}).map(function(crop){
+    $('.crops').empty().append(_.sortBy(result.crops, function(c){return -c.score.total;}).map(function(crop){
         return $('<p>')
             .text('Score: ' + ~~(crop.score.total*10000000) + ', ' + crop.x+'x'+crop.y)
             .hover(function(){
