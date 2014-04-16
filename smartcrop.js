@@ -42,7 +42,7 @@ SmartCrop.DEFAULTS = {
     skinBrightnessMax: 1.0,
     skinThreshold: 0.8,
     skinWeight: 1.8,
-    saturationBrightnessMin: 0.25,
+    saturationBrightnessMin: 0.05,
     saturationBrightnessMax: 0.9,
     saturationThreshold: 0.4,
     saturationBias: 0.2,
@@ -115,6 +115,18 @@ SmartCrop.crop = function(image, options, callback){
     }
     callback(result);
     return result;
+};
+// check if all the dependencies are there
+SmartCrop.isAvailable = function(options){
+    try {
+        var s = new this(options),
+            c = s.canvas(16, 16);
+        if(typeof c.getContext !== 'function') return false;
+        return true;
+    }
+    catch(e){
+        return false;
+    }
 };
 SmartCrop.prototype = {
     canvas: function(w, h){
