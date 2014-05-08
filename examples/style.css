@@ -26,3 +26,37 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
     height: 600px;
     overflow: auto;
 }
+
+#slide, #prev-slide {
+    max-width: 100%;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+}
+#slide {
+    background: #ccc;
+}
+#prev-slide {
+    position: absolute;
+    z-index: 1;
+}
+
+#prev-slide img {
+    transition: all 1s linear;
+    -webkit-transition: all 1s linear;
+    opacity: 0.9;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
+
+#slide img {
+    transition: all 5s linear;
+    -webkit-transition: all 5s linear;
+    /*transition-delay: 1s;*/
+    /*-webkit-transition-delay: 1s; [> Safari <]*/
+    opacity: 1;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
