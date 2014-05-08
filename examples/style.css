@@ -5,6 +5,18 @@ body {
     padding: 8px;
     margin: auto;
 }
+.dark {
+    background: #111;
+    color: #888;
+}
+.dark a {
+    color: #8af;
+}
+
+h1 {
+    font-weight: normal;
+}
+
 p {
     max-width: 900px;
 }

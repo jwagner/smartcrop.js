@@ -26,7 +26,7 @@ function slideShow(images){
         .each(function(i){
             i.img = new Image();
             i.img.onload = function(){
-                var options = {width: width*0.1, height: height*0.1};
+                var options = {width: width*0.1, height: height*0.1, ruleOfThirds: false};
                 SmartCrop.crop(i.img, _.extend({maxScale: 0.8, minScale: 0.7}, options), function(from){
                     i.from = from;
                     if(++analysed==images.length*2) next();
@@ -58,7 +58,7 @@ function showSlide(image, done){
     }
 
     // zooming out usually works better, but some change is good too
-    if(image.from.topCrop.score.total*3.9 > image.to.topCrop.score.total) {
+    if((image.from.topCrop.score.total+0.1)*1.002 > (image.to.topCrop.score.total+0.1)) {
         from = image.from;
         to = image.to;
     }
