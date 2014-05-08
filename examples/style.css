@@ -5,6 +5,9 @@ body {
     padding: 8px;
     margin: auto;
 }
+.dark body {
+    max-width: 1240px;
+}
 .dark {
     background: #111;
     color: #888;
