@@ -18,9 +18,9 @@ It does this using fairly dumb image processing. In short:
 1. Output the candidate crop with the highest rank
 
 ## Demos
-* [Test Suite](http://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html) containing over 100 images, **heavy**
-* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html) allows you to upload your own images
-
+* [Test Suite](http://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**
+* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to upload your own images
+* [Photo transitions](http://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creats ken burns transitions for a slide show.
 
 ## Simple Example
 ```javascript

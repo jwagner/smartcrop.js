@@ -12,6 +12,25 @@ for(var i = 0; i < 8; i++) {
     images.push({url: 'images/slideshow/' + i + '.jpg'});
 }
 
+function loadImage(src){
+    var d = Q.defer(),
+        i = new Image();
+    i.onload = function(){
+        d.resolve(i);
+    };
+    i.onerror = function(e) {
+        d.reject(e);
+    };
+    i.src = src;
+    return d.promise;
+}
+
+function smartCrop(img, options){
+    var d = Q.defer();
+    SmartCrop.crop(img, options, d.resolve.bind(d));
+    return d.promise;
+}
+
 function slideShow(images){
     var analysed = 0,
         i = 0;
@@ -23,22 +42,22 @@ function slideShow(images){
     images = _.chain(images)
         .shuffle()
         .head(10)
-        .each(function(i){
-            i.img = new Image();
-            i.img.onload = function(){
-                var options = {width: width*0.1, height: height*0.1, ruleOfThirds: false};
-                SmartCrop.crop(i.img, _.extend({maxScale: 0.8, minScale: 0.7}, options), function(from){
-                    i.from = from;
-                    if(++analysed==images.length*2) next();
-                });
-                SmartCrop.crop(i.img, _.extend({minScale: 1.0}, options), function(to){
-                    i.to = to;
-                    if(++analysed==images.length*2) next();
-                });
-            };
-            i.img.src = i.url;
-        })
         .value();
+
+    Q.all(images.map(function(i){
+        return loadImage(i.url).then(function(img){
+            i.img = img;
+            var options = {width: width*0.1, height: height*0.1, ruleOfThirds: false};
+            return Q.all([
+                smartCrop(img, _.extend({maxScale: 0.8, minScale: 0.7}, options)).then(function(result){
+                    i.from = result;
+                }),
+                smartCrop(img, _.extend({minScale: 1}, options)).then(function(result){
+                    i.to = result;
+                })
+            ]);
+        });
+    })).then(next);
     //showSlide(images[i], function(){});
 }
 
