@@ -103,11 +103,11 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 
 ## Contributors
 
-* [Christian Muelhaeuser](https://github.com/muesli)
+* [Christian Muehlhaeuser](https://github.com/muesli)
 
 ## Ports, Alternatives
 
-* [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muelhaeuser](https://github.com/muesli)
+* [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muehlhaeuser](https://github.com/muesli)
 
 ## License
 Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)
