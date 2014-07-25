@@ -24,7 +24,7 @@ It does this using fairly dumb image processing. In short:
 
 ## Simple Example
 ```javascript
-var result = SmartCrop.crop(image, {width: 100, height: 100}, function(result){console.log(result);});
+SmartCrop.crop(image, {width: 100, height: 100}, function(result){console.log(result);});
 // {topCrop: {x: 300, y: 200, height: 200, width: 200}}
 ```
 
