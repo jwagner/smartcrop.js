@@ -36,12 +36,8 @@ SmartCrop.DEFAULTS = {
     cropWidth: 0,
     cropHeight: 0,
     detailWeight: 0.2,
-    skinColor: [0.78, 0.57, 0.44],
     skinBias: 0.01,
-    skinBrightnessMin: 0.2,
-    skinBrightnessMax: 1.0,
-    skinThreshold: 0.8,
-    skinWeight: 1.8,
+    skinWeight: 1.0,
     saturationBrightnessMin: 0.05,
     saturationBrightnessMax: 0.9,
     saturationThreshold: 0.4,
@@ -166,10 +162,15 @@ SmartCrop.prototype = {
         for(var y = 0; y < h; y++) {
             for(var x = 0; x < w; x++) {
                 var p = (y*w+x)*4,
-                    lightness = cie(id[p], id[p+1], id[p+2])/255,
-                    skin = this.skinColor(id[p], id[p+1], id[p+2]);
-                if(skin > options.skinThreshold && lightness >= options.skinBrightnessMin && lightness <= options.skinBrightnessMax){
-                    od[p] = (skin-options.skinThreshold)*(255/(1-options.skinThreshold));
+                    r = id[p],
+                    g = id[p+1],
+                    b = id[p+2],
+                    abs_rg = Math.abs(r-g);
+                // Human Skin Colour Clustering for Face Detection
+                // Jure Kovac, Peter Peer, and Franc Solina
+                // http://eprints.fri.uni-lj.si/2113/1/Human_Skin_Colour_Clustering_for_Face_Detection.pdf
+                if((r > 95 && g > 40 && b > 20 && Math.max(r,g,b)-Math.min(r,g,b) > 15 && abs_rg > 15 && r > g && r > b) || (r > 220 && g > 210 && b > 170 && abs_rg <= 15 && r > b && g > b)){
+                    od[p] = 255;
                 }
                 else {
                     od[p] = 0;
@@ -264,15 +265,6 @@ SmartCrop.prototype = {
             s += (Math.max(0, s+d+0.5)*1.2)*(thirds(px)+thirds(py));
         }
         return s+d;
-    },
-    skinColor: function(r, g, b){
-        var mag = sqrt(r*r+g*g+b*b),
-            options = this.options,
-            rd = (r/mag-options.skinColor[0]),
-            gd = (g/mag-options.skinColor[1]),
-            bd = (b/mag-options.skinColor[2]),
-            d = sqrt(rd*rd+gd*gd+bd*bd);
-            return 1-d;
     },
     analyse: function(image){
         var result = {},
