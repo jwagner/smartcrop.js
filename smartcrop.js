@@ -113,7 +113,7 @@ SmartCrop.crop = function(image, options, callback){
         crop.width = ~~(crop.width/prescale);
         crop.height = ~~(crop.height/prescale);
     }
-    callback(result);
+    if(callback) callback(result);
     return result;
 };
 // check if all the dependencies are there
