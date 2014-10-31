@@ -83,7 +83,7 @@ SmartCrop.crop = function(image, options, callback){
         scale = min(image.width/options.width, image.height/options.height);
         options.cropWidth = ~~(options.width * scale);
         options.cropHeight = ~~(options.height * scale);
-        // img = 100x100, width = 95x95, scale = 100/95, 1/scale > min 
+        // img = 100x100, width = 95x95, scale = 100/95, 1/scale > min
         // don't set minscale smaller than 1/scale
         // -> don't pick crops that need upscaling
         options.minScale = min(options.maxScale || SmartCrop.DEFAULTS.maxScale, max(1/scale, (options.minScale||SmartCrop.DEFAULTS.minScale)));
@@ -121,8 +121,7 @@ SmartCrop.isAvailable = function(options){
     try {
         var s = new this(options),
             c = s.canvas(16, 16);
-        if(typeof c.getContext !== 'function') return false;
-        return true;
+        return typeof c.getContext === 'function';
     }
     catch(e){
         return false;
@@ -305,7 +304,7 @@ SmartCrop.prototype = {
                 topCrop = crop;
                 topScore = crop.score.total;
             }
-            
+
         }
 
         result.crops = crops;
@@ -314,23 +313,21 @@ SmartCrop.prototype = {
         if(options.debug && topCrop){
             ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
             ctx.fillRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
-            if(true){
-                for(var y = 0; y < output.height; y++) {
-                    for(var x = 0; x < output.width; x++) {
-                        var p = (y*output.width+x)*4;
-                        var importance = this.importance(topCrop, x, y);
-                        if(importance > 0) {
-                            output.data[p+1] += importance*32;
-                        }
-
-                        if(importance < 0) {
-                            output.data[p] += importance*-64;
-                        }
-                        output.data[p+3] = 255;
+            for (var y = 0; y < output.height; y++) {
+                for (var x = 0; x < output.width; x++) {
+                    var p = (y * output.width + x) * 4;
+                    var importance = this.importance(topCrop, x, y);
+                    if (importance > 0) {
+                        output.data[p + 1] += importance * 32;
                     }
+
+                    if (importance < 0) {
+                        output.data[p] += importance * -64;
+                    }
+                    output.data[p + 3] = 255;
                 }
-                ctx.putImageData(output, 0, 0);
             }
+            ctx.putImageData(output, 0, 0);
             ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
             ctx.strokeRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
             result.debugCanvas = canvas;
@@ -380,11 +377,6 @@ function saturation(r, g, b){
         d = maximum-minumum;
     return l > 0.5 ? d/(2-maximum-minumum) : d/(maximum+minumum);
 }
-
-
-
-
-
 
 // amd
 if (typeof define !== 'undefined' && define.amd) define(function(){return SmartCrop;});
