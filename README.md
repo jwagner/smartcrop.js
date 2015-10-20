@@ -17,7 +17,7 @@ Smartcrop.js works using fairly dumb image processing. In short:
 1. Find regions with a color like skin
 1. Find regions high in saturation
 1. Generate a set of candidate crops using a sliding window
-1. Rank them using a importance function to focus the detail in the center
+1. Rank them using an importance function to focus the detail in the center
   and avoid it in the edges. 
 1. Output the candidate crop with the highest rank
 
