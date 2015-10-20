@@ -107,6 +107,7 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 
 ## Ports, Alternatives
 
+* [connect-thumbs](https://github.com/inadarei/connect-thumbs) Image thumbnailing middleware for Connect.js/Express.js that can use smartcrop.js by [Irakli Nadareishvili](https://github.com/inadarei/connect-thumbs)
 * [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muehlhaeuser](https://github.com/muesli)
 * [smartcrop.py](https://github.com/hhatto/smartcrop.py) by [Hideo Hattori](http://www.hexacosa.net/about/)
 
