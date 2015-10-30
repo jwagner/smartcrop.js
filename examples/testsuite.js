@@ -4,18 +4,15 @@ if (typeof window.performance === 'undefined') {
 }
 
 if (!window.performance.now){
-
     var nowOffset = Date.now();
 
     if (performance.timing && performance.timing.navigationStart){
       nowOffset = performance.timing.navigationStart;
     }
 
-
     window.performance.now = function now(){
       return Date.now() - nowOffset;
     };
-
 }
 
 var processed = {},
@@ -36,7 +33,7 @@ $('img').each(function(){
             if(processed[img.src]) return;
             processed[img.src] = true;
             var t = performance.now();
-            SmartCrop.crop(img, options, function(result){
+            smartCrop.crop(img, options, function(result){
                 totalTime += (performance.now()-t)/1e3;
                 totalmpix += (img.naturalWidth*img.naturalHeight)/1e6;
                 totalCrops++;
@@ -50,7 +47,7 @@ $('img').each(function(){
                 ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
                 $(img)
                     .after(canvas)
-                    .after(result.debugCanvas)
+                    .after(smartCrop.debugDraw(result))
                     .parent()
                     .append($('<p>').text(JSON.stringify(crop.score)));
             });

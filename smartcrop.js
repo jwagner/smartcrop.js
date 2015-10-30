@@ -155,7 +155,6 @@ function edgeDetect(i, o){
                 lightness = sample(id, p)*4 - sample(id, p-w*4) - sample(id, p-4) - sample(id, p+4) - sample(id, p+w*4);
             }
             od[p+1] = lightness;
-            od[p+1] = id[p+1];
         }
     }
 }
@@ -283,7 +282,7 @@ function analyse(options, input){
     skinDetect(options, input, output);
     saturationDetect(options, input, output);
 
-    var scoreOutput = downSample(output, options.scoreDownSample);
+    var scoreOutput = downSampleCanvas(output, options.scoreDownSample);
 
     var topScore = -Infinity,
         topCrop = null,
@@ -305,12 +304,14 @@ function analyse(options, input){
     if(options.debug && topCrop){
         result.debugOutput = output;
         result.debugOptions = options;
+        // create a copy which will not be adjusted by the post scaling of smartCrop.crop
+        result.debugTopCrop = extend({}, result.topCrop);
     }
     return result;
 }
 
 function debugDraw(result){
-    var topCrop = result.topCrop;
+    var topCrop = result.debugTopCrop;
     var options = result.debugOptions;
     var output = result.debugOutput;
     var canvas = options.canvasFactory(output.width, output.height);
@@ -351,6 +352,20 @@ function ImgData(width, height, data){
     else {
         this.data = new Uint8ClampedArray(width*height*4);
     }
+}
+
+function downSampleCanvas(input, factor){
+    var c = document.createElement('canvas');
+    c.width = input.width;
+    c.height = input.height;
+    var ctx = c.getContext('2d');
+    var id = ctx.createImageData(c.width, c.height);
+    id.data.set(input.data);
+    ctx.putImageData(id, 0, 0);
+    var w = Math.ceil(input.width/factor);
+    var h = Math.ceil(input.height/factor);
+    ctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, w, h);
+    return ctx.getImageData(0, 0, w, h);
 }
 
 function downSample(input, factor){
