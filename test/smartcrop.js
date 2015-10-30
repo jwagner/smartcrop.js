@@ -17,12 +17,9 @@ describe("SmartCrop", function() {
         it("should return true when canvas is available", function(){
             expect(smartCrop.isAvailable()).to.equal(true);
         });
-        it("should return false when canvas is not available", function(){
-            expect(SmartCrop.isAvailable({canvasFactory: function(){}})).to.equal(false);
-        });
     });
     describe("crop", function() {
-        it("should do something sane", function(done){
+        it("should do something sane", function(){
             var c = document.createElement('canvas'),
                 ctx = c.getContext('2d');
             c.width = 128;
@@ -31,14 +28,13 @@ describe("SmartCrop", function() {
             ctx.fillRect(0, 0, 128, 64);
             ctx.fillStyle = 'red';
             ctx.fillRect(96, 32, 16, 16);
-            SmartCrop.crop(c, {debug: false}, function(result){
+            return SmartCrop.crop(c, {debug: false}).then(function(result){
                 //document.body.appendChild(c);
                 //document.body.appendChild(result.debugCanvas);
                 expect(result.topCrop.x).to.be.lessThan(96);
                 expect(result.topCrop.y).to.be.lessThan(32);
                 expect(result.topCrop.x+result.topCrop.width).to.be.greaterThan(112);
                 expect(result.topCrop.y+result.topCrop.height).to.be.greaterThan(48);
-                done();
             });
         });
         it("should adhere to minScale", function(done) {
@@ -54,6 +50,62 @@ describe("SmartCrop", function() {
                 validResult(result);
                 done();
             });
+        });
+    });
+    describe('_downSample', function(){
+        var input = {
+            width: 4,
+            height: 4,
+            data: mono2rgba([
+                1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 8, 7, 6,
+                5, 4, 3, 2
+            ])
+        };
+        function mono2rgba(input){
+            var output = new Uint8Array(input.length*4);
+            for(var i = 0; i < input.length; i++) {
+                output[i*4] = input[i];
+                output[i*4+1] = input[i];
+                output[i*4+2] = input[i];
+                output[i*4+3] = input[i];
+            }
+            return output;
+        }
+        it('keeps the image the same at a factor of one', function(){
+            var output = smartCrop._downSample(input, 1);
+            expect(output.width).to.equal(input.width);
+            expect(output.height).to.equal(input.height);
+            expect(output.data).to.deep.equal(input.data);
+        });
+
+        it('samples down an image by a factor of two', function(){
+            var expectedOutputData = mono2rgba([
+                (1+2+4+6)/4, (3+4+7+8)/4,
+                (9+8+5+4)/4, (7+6+3+2)/4
+            ]);
+            var output = smartCrop._downSample(input, 2);
+            expect(output.width).to.equal(input.width/2);
+            expect(output.height).to.equal(input.height/2);
+            expect(output.data).to.deep.equal(expectedOutputData);
+        });
+        it('keeps the a constant value constant', function () {
+            var w = 59, h = 23;
+            var input = {
+                width: 59,
+                height: 23,
+                data: new Uint8ClampedArray(59*23*4)
+            };
+            for(var i = 0; i < input.data.length; i++) {
+                input.data[i] = 119;
+            }
+            var output = smartCrop._downSample(input, 8);
+            expect(output.width).to.equal(~~(input.width/8));
+            expect(output.height).to.equal(~~(input.height/8));
+            for(var i = 0; i < output.data.length; i++) {
+                expect(output.data[i]).to.be.within(118, 120);
+            }
         });
     });
 });

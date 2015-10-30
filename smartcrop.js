@@ -26,7 +26,14 @@
 (function(){
 "use strict";
 
+
+
 var smartCrop = {};
+// promise implementation to use
+smartCrop.Promise = typeof Promise !== 'undefined' ? Promise : function(){
+    throw new Error('No native promises and smartCrop.promise not set.');
+};
+
 smartCrop.DEFAULTS = {
     width: 0,
     height: 0,
@@ -56,93 +63,81 @@ smartCrop.DEFAULTS = {
     outsideImportance: -0.5,
     ruleOfThirds: true,
     prescale: true,
-    canvasFactory: null,
-    imageOperations: {
-        open: function() {
-        },
-        resample: function() {
-        },
-        getData: function() {
-        } 
-    },
+    imageOperations: null,
+    canvasFactory: defaultCanvasFactory,
     //factory: defaultFactories,
     debug: false
 };
-smartCrop.crop = function(image, options_, callback){
+
+
+
+smartCrop.crop = function(inputImage, options_, callback){
    var options = extend({}, smartCrop.DEFAULTS, options_);
     if(options.aspect){
         options.width = options.aspect;
         options.height = 1;
     }
-
-    // work around images scaled in css by drawing them onto a canvas
-    if(image.naturalWidth && (image.naturalWidth != image.width || image.naturalHeight != image.height)){
-        var c = canvas(options, image.naturalWidth, image.naturalHeight),
-            cctx = c.getContext('2d');
-        c.width = image.naturalWidth;
-        c.height = image.naturalHeight;
-        cctx.drawImage(image, 0, 0);
-        image = c;
+    if(options.imageOperations === null) {
+        options.imageOperations = canvasImageOperations(options.canvasFactory);
     }
 
-    var scale = 1,
-        prescale = 1;
-    if(options.width && options.height) {
-        scale = min(image.width/options.width, image.height/options.height);
-        options.cropWidth = ~~(options.width * scale);
-        options.cropHeight = ~~(options.height * scale);
-        // img = 100x100, width = 95x95, scale = 100/95, 1/scale > min
-        // don't set minscale smaller than 1/scale
-        // -> don't pick crops that need upscaling
-        options.minScale = min(options.maxScale, max(1/scale, options.minScale));
-    }
-    if(options.width && options.height) {
-        if(options.prescale !== false){
-            prescale = 1/scale/options.minScale;
-            if(prescale < 1) {
-                var prescaledCanvas = canvas(options, image.width*prescale, image.height*prescale),
-                    ctx = prescaledCanvas.getContext('2d');
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, prescaledCanvas.width, prescaledCanvas.height);
-                image = prescaledCanvas;
-                options.cropWidth = ~~(options.cropWidth*prescale);
-                options.cropHeight = ~~(options.cropHeight*prescale);
-            }
-            else {
-                prescale = 1;
+    var iop = options.imageOperations;
+    return iop.open(inputImage).then(function(image){
+        var scale = 1,
+            prescale = 1;
+        if(options.width && options.height) {
+            scale = min(image.width/options.width, image.height/options.height);
+            options.cropWidth = ~~(options.width * scale);
+            options.cropHeight = ~~(options.height * scale);
+            // img = 100x100, width = 95x95, scale = 100/95, 1/scale > min
+            // don't set minscale smaller than 1/scale
+            // -> don't pick crops that need upscaling
+            options.minScale = min(options.maxScale, max(1/scale, options.minScale));
+        }
+        if(options.width && options.height) {
+            if(options.prescale !== false){
+                prescale = 1/scale/options.minScale;
+                if(prescale < 1) {
+                    image = iop.resample(image, image.width*prescale, image.height*prescale);
+                    options.cropWidth = ~~(options.cropWidth*prescale);
+                    options.cropHeight = ~~(options.cropHeight*prescale);
+                }
+                else {
+                    prescale = 1;
+                }
             }
         }
-    }
-    var result = analyse(options, image);
-    for(var i = 0, i_len = result.crops.length; i < i_len; i++) {
-        var crop = result.crops[i];
-        crop.x = ~~(crop.x/prescale);
-        crop.y = ~~(crop.y/prescale);
-        crop.width = ~~(crop.width/prescale);
-        crop.height = ~~(crop.height/prescale);
-    }
-    callback(result);
-    return result;
-};
-// check if all the dependencies are there
-smartCrop.isAvailable = function(options){
-    try {
-        var c = canvas(options, 16, 16);
-        return typeof c.getContext === 'function';
-    }
-    catch(e){
-        return false;
-    }
+
+        return iop.getData(image).then(function(data){
+            var result = analyse(options, data);
+            for(var i = 0, i_len = result.crops.length; i < i_len; i++) {
+                var crop = result.crops[i];
+                crop.x = ~~(crop.x/prescale);
+                crop.y = ~~(crop.y/prescale);
+                crop.width = ~~(crop.width/prescale);
+                crop.height = ~~(crop.height/prescale);
+            }
+            if(callback) callback(result);
+            return result;
+        });
+
+    });
 };
 
-function canvas(options, w, h){
-    if(options && options.canvasFactory !== null){
-        return options.canvasFactory(w, h);
+
+// check if all the dependencies are there
+// todo:
+smartCrop.isAvailable = function(options){
+    if(!smartCrop.Promise) return false;
+    var canvasFactory = options ? options.canvasFactory : defaultCanvasFactory;
+    if(canvasFactory === defaultCanvasFactory){
+        var c = document.createElement('canvas');
+        if(!c.getContext('2d')){
+            return false;
+        }
     }
-    var c = document.createElement('canvas');
-    c.width = w;
-    c.height = h;
-    return c;
-}
+    return true;
+};
 
 function edgeDetect(i, o){
     var id = i.data,
@@ -160,6 +155,7 @@ function edgeDetect(i, o){
                 lightness = sample(id, p)*4 - sample(id, p-w*4) - sample(id, p-4) - sample(id, p+4) - sample(id, p+w*4);
             }
             od[p+1] = lightness;
+            od[p+1] = id[p+1];
         }
     }
 }
@@ -204,10 +200,8 @@ function saturationDetect(options, i, o){
     }
 }
 
-function generateCrops(options, image){
+function generateCrops(options, width, height){
     var results = [],
-        width = image.width,
-        height = image.height,
         minDimension = min(width, height),
         cropWidth = options.cropWidth || minDimension,
         cropHeight = options.cropHeight || minDimension;
@@ -239,6 +233,7 @@ function score(options, output, crop){
         outputHeightDownSample = output.height*downSample,
         outputWidthDownSample = output.width*downSample,
         outputWidth = output.width;
+
     for(var y = 0; y < outputHeightDownSample; y+=downSample) {
         for(var x = 0; x < outputWidthDownSample; x+=downSample) {
             var p = (~~(y*invDownSample)*outputWidth+~~(x*invDownSample))*4,
@@ -250,6 +245,7 @@ function score(options, output, crop){
         }
 
     }
+
     result.total = (result.detail*options.detailWeight + result.skin*options.skinWeight + result.saturation*options.saturationWeight)/crop.width/crop.height;
     return result;
 }
@@ -280,28 +276,18 @@ function skinColor(options, r, g, b){
         return 1-d;
 }
 
-function analyse(options, image){
-    var result = {},
-        c = canvas(options, image.width, image.height),
-        ctx = c.getContext('2d');
-    ctx.drawImage(image, 0, 0);
-    var input = ctx.getImageData(0, 0, c.width, c.height),
-        output = ctx.getImageData(0, 0, c.width, c.height);
+function analyse(options, input){
+    var result = {};
+    var output = new ImgData(input.width, input.height);
     edgeDetect(input, output);
     skinDetect(options, input, output);
     saturationDetect(options, input, output);
 
-    var scoreCanvas = canvas(options, ceil(image.width/options.scoreDownSample), ceil(image.height/options.scoreDownSample)),
-        scoreCtx = scoreCanvas.getContext('2d');
-
-    ctx.putImageData(output, 0, 0);
-    scoreCtx.drawImage(c, 0, 0, c.width, c.height, 0, 0, scoreCanvas.width, scoreCanvas.height);
-
-    var scoreOutput = scoreCtx.getImageData(0, 0, scoreCanvas.width, scoreCanvas.height);
+    var scoreOutput = downSample(output, options.scoreDownSample);
 
     var topScore = -Infinity,
         topCrop = null,
-        crops = generateCrops(options, image);
+        crops = generateCrops(options, input.width, input.height);
 
     for(var i = 0, i_len = crops.length; i < i_len; i++) {
         var crop = crops[i];
@@ -317,32 +303,134 @@ function analyse(options, image){
     result.topCrop = topCrop;
 
     if(options.debug && topCrop){
-        debugDraw(options, c, ctx, topCrop, output);
-        result.debugCanvas = c;
+        result.debugOutput = output;
+        result.debugOptions = options;
     }
     return result;
 }
 
-function debugDraw(options, c, ctx, topCrop, output){
+function debugDraw(result){
+    var topCrop = result.topCrop;
+    var options = result.debugOptions;
+    var output = result.debugOutput;
+    var canvas = options.canvasFactory(output.width, output.height);
+    var ctx = canvas.getContext('2d');
     ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
     ctx.fillRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
+    var debugOutput = ctx.createImageData(output.width, output.height);
+    debugOutput.data.set(output.data);
     for (var y = 0; y < output.height; y++) {
         for (var x = 0; x < output.width; x++) {
             var p = (y * output.width + x) * 4;
-            var i = importance(options, topCrop, x, y);
-            if (i > 0) {
-                output.data[p + 1] += i * 32;
+            var I = importance(options, topCrop, x, y);
+            if (I > 0) {
+                debugOutput.data[p + 1] += I * 32;
             }
 
-            if (i < 0) {
-                output.data[p] += i * -64;
+            if (I < 0) {
+                debugOutput.data[p] += I * -64;
             }
-            output.data[p + 3] = 255;
+            debugOutput.data[p + 3] = 255;
         }
     }
-    ctx.putImageData(output, 0, 0);
+
+
+    ctx.putImageData(debugOutput, 0, 0);
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
     ctx.strokeRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
+    return canvas;
+}
+smartCrop.debugDraw = debugDraw;
+
+function ImgData(width, height, data){
+    this.width = width;
+    this.height = height;
+    if(data){
+        this.data = new Uint8ClampedArray(data);
+    }
+    else {
+        this.data = new Uint8ClampedArray(width*height*4);
+    }
+}
+
+function downSample(input, factor){
+    var idata = input.data;
+    var iwidth = input.width;
+    var width = Math.floor(input.width/factor);
+    var height = Math.floor(input.height/factor);
+    var output = new ImgData(width, height);
+    var data = output.data;
+    var ifactor2 = 1/(factor*factor);
+    for(var y = 0; y < height; y++) {
+        for(var x = 0; x < width; x++) {
+            var i = (y*width+x)*4;
+            var r = 0, g = 0, b = 0, a = 0;
+            for(var v = 0; v < factor; v++) {
+                for(var u = 0; u < factor; u++) {
+                    var j = ((y*factor+v)*iwidth+(x*factor+u))*4;
+                    r += idata[j];
+                    g += idata[j+1];
+                    b += idata[j+2];
+                    a += idata[j+3];
+                }
+            }
+            data[i] = r*ifactor2;
+            data[i+1] = g*ifactor2;
+            data[i+2] = b*ifactor2;
+            data[i+3] = a*ifactor2;
+        }
+    }
+    return output;
+}
+smartCrop._downSample = downSample;
+
+function defaultCanvasFactory(w, h){
+    var c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    return c;
+}
+
+function canvasImageOperations(canvasFactory) {
+    return {
+        // takes imageInput as argument
+        // returns an object which has at least
+        // {width: n, height: n}
+        open: function(image) {
+            // work around images scaled in css by drawing them onto a canvas
+            var w = image.naturalWidth || image.width;
+            var h = image.naturalHeight || image.height;
+            var c = canvasFactory(w, h);
+            var ctx = c.getContext('2d');
+            if(image.naturalWidth && (image.naturalWidth != image.width || image.naturalHeight != image.height)){
+                c.width = image.naturalWidth;
+                c.height = image.naturalHeight;
+            }
+            else {
+                c.width = image.width;
+                c.height = image.height;
+            }
+            ctx.drawImage(image, 0, 0);
+            return smartCrop.Promise.resolve(c);
+        },
+        // takes an image (as returned by open), and changes it's size by resampling
+        resample: function(image, width, height) {
+            return Promise.resolve(image).then(function(image){
+                var c = canvasFactory(~~width, ~~height),
+                    ctx = c.getContext('2d');
+
+                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
+                return smartCrop.Promise.resolve(c);
+            });
+        },
+        getData: function(image) {
+            return Promise.resolve(image).then(function(c){
+                var ctx = c.getContext('2d');
+                var id = ctx.getImageData(0, 0, c.width, c.height);
+                return new ImgData(c.width, c.height, id.data);
+            });
+        }
+    };
 }
 
 // aliases and helpers
