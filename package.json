@@ -6,14 +6,15 @@
   "author": "Jonas Wagner <jonas@29a.ch> (http://29a.ch/)",
   "main": "./smartcrop",
   "devDependencies": {
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-connect": "~0.7.1",
     "500px": "~0.3.2",
-    "grunt-rsync": "~0.5.0",
-    "grunt": "^0.4.4",
-    "mocha": "^1.18.2",
+    "benchmark": "~1.0.0",
     "chai": "^1.9.1",
-    "benchmark": "~1.0.0"
+    "grunt": "^0.4.4",
+    "grunt-contrib-connect": "~0.7.1",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-rsync": "~0.5.0",
+    "microtime": "^2.0.0",
+    "mocha": "^1.18.2"
   },
   "license": "MIT",
   "repository": {

@@ -15,7 +15,7 @@ describe("SmartCrop", function() {
     }
     describe("isAvailable", function(){
         it("should return true when canvas is available", function(){
-            expect(SmartCrop.isAvailable()).to.equal(true);
+            expect(smartCrop.isAvailable()).to.equal(true);
         });
         it("should return false when canvas is not available", function(){
             expect(SmartCrop.isAvailable({canvasFactory: function(){}})).to.equal(false);
