@@ -47,7 +47,7 @@ $('img').each(function(){
                 ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
                 $(img)
                     .after(canvas)
-                    .after(smartCrop.debugDraw(result))
+                    .after(smartCrop.debugDraw(result, true))
                     .parent()
                     .append($('<p>').text(JSON.stringify(crop.score)));
             });

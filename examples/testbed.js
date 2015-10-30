@@ -63,7 +63,7 @@ function draw(result){
             .data('crop', crop);
     }));
     drawCrop(selectedCrop);
-    $('#debug').empty().append(smartCrop.debugDraw(result));
+    $('#debug').empty().append(smartCrop.debugDraw(result, true));
 }
 function drawCrop(crop){
     canvas.width = img.width;

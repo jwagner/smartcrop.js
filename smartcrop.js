@@ -282,7 +282,7 @@ function analyse(options, input){
     skinDetect(options, input, output);
     saturationDetect(options, input, output);
 
-    var scoreOutput = downSampleCanvas(output, options.scoreDownSample);
+    var scoreOutput = downSample(output, options.scoreDownSample);
 
     var topScore = -Infinity,
         topCrop = null,
@@ -310,7 +310,7 @@ function analyse(options, input){
     return result;
 }
 
-function debugDraw(result){
+function debugDraw(result, showCrop){
     var topCrop = result.debugTopCrop;
     var options = result.debugOptions;
     var output = result.debugOutput;
@@ -323,13 +323,15 @@ function debugDraw(result){
     for (var y = 0; y < output.height; y++) {
         for (var x = 0; x < output.width; x++) {
             var p = (y * output.width + x) * 4;
-            var I = importance(options, topCrop, x, y);
-            if (I > 0) {
-                debugOutput.data[p + 1] += I * 32;
-            }
+            if(showCrop){
+                var I = importance(options, topCrop, x, y);
+                if (I > 0) {
+                    debugOutput.data[p + 1] += I * 32;
+                }
 
-            if (I < 0) {
-                debugOutput.data[p] += I * -64;
+                if (I < 0) {
+                    debugOutput.data[p] += I * -64;
+                }
             }
             debugOutput.data[p + 3] = 255;
         }
@@ -338,7 +340,9 @@ function debugDraw(result){
 
     ctx.putImageData(debugOutput, 0, 0);
     ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
-    ctx.strokeRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
+    if(showCrop){
+        ctx.strokeRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
+    }
     return canvas;
 }
 smartCrop.debugDraw = debugDraw;
@@ -361,10 +365,13 @@ function downSampleCanvas(input, factor){
     var ctx = c.getContext('2d');
     var id = ctx.createImageData(c.width, c.height);
     id.data.set(input.data);
+    for(var i = 0; i < id.data.length; i+=4) {
+        id.data[i+3] = 255;
+    }
     ctx.putImageData(id, 0, 0);
     var w = Math.ceil(input.width/factor);
     var h = Math.ceil(input.height/factor);
-    ctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, w, h);
+    ctx.drawImage(c, 0, 0, input.width, input.height, 0, 0, w, h);
     return ctx.getImageData(0, 0, w, h);
 }
 
@@ -380,6 +387,7 @@ function downSample(input, factor){
         for(var x = 0; x < width; x++) {
             var i = (y*width+x)*4;
             var r = 0, g = 0, b = 0, a = 0;
+            var mr = 0, mg = 0, mb = 0;
             for(var v = 0; v < factor; v++) {
                 for(var u = 0; u < factor; u++) {
                     var j = ((y*factor+v)*iwidth+(x*factor+u))*4;
@@ -387,10 +395,13 @@ function downSample(input, factor){
                     g += idata[j+1];
                     b += idata[j+2];
                     a += idata[j+3];
+                    mr = Math.max(mr, idata[j]);
+                    mg = Math.max(mg, idata[j+1]);
+                    mb = Math.max(mb, idata[j+2]);
                 }
             }
-            data[i] = r*ifactor2;
-            data[i+1] = g*ifactor2;
+            data[i] = r*ifactor2*0.5+mr*0.5;
+            data[i+1] = g*ifactor2*0.7+mg*0.3;
             data[i+2] = b*ifactor2;
             data[i+3] = a*ifactor2;
         }
