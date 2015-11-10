@@ -54,7 +54,7 @@ The API is not yet finalized. Look at the code for details and expect changes.
 ### SmartCrop.crop(image, options, callback)
 Crop image using options and call callback(result) when done.
 
-**image:** anything ctx.drawImage() accepts, usually HTMLImageElement, HTMLCanvasElement or HTMLVideoElement
+**image:** anything ctx.drawImage() accepts, usually HTMLImageElement, HTMLCanvasElement or HTMLVideoElement. Keep in mind that [origin policies](https://en.wikipedia.org/wiki/Same-origin_policy) apply to the image source, and you may not use cross-domain images without [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
 
 **options:** see cropOptions
 
