@@ -26,9 +26,9 @@ jQuery(function($) {
     return d.promise;
   }
 
-  function smartCrop(img, options) {
+  function smartcrop(img, options) {
     var d = Q.defer();
-    SmartCrop.crop(img, options, d.resolve.bind(d));
+    smartcrop.crop(img, options, d.resolve.bind(d));
     return d.promise;
   }
 
@@ -51,10 +51,10 @@ jQuery(function($) {
         i.img = img;
         var options = {width: width * 0.1, height: height * 0.1, ruleOfThirds: false};
         return Q.all([
-                smartCrop(img, _.extend({maxScale: 0.8, minScale: 0.7}, options)).then(function(result) {
+                smartcrop(img, _.extend({maxScale: 0.8, minScale: 0.7}, options)).then(function(result) {
                   i.from = result;
                 }),
-                smartCrop(img, _.extend({minScale: 1}, options)).then(function(result) {
+                smartcrop(img, _.extend({minScale: 1}, options)).then(function(result) {
                   i.to = result;
                 }),
             ]);

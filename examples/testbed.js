@@ -47,7 +47,7 @@ function load(src) {
 
 function analyze() {
   if (!img) return;
-  smartCrop.crop(img, {
+  smartcrop.crop(img, {
     width: form.width.value * 1,
     height: form.height.value * 1,
     minScale: form.minScale.value * 1,
@@ -75,7 +75,7 @@ function draw(result) {
       );
 
   drawCrop(selectedCrop);
-  $('#debug').empty().append(smartCrop.debugDraw(result, true));
+  $('#debug').empty().append(smartcrop.debugDraw(result, true));
 }
 
 function drawCrop(crop) {

@@ -22,9 +22,9 @@ $.getJSON('images/images.json', function(images) {
     return $('<div>')
         .append($('<img>').attr('src', image.url))
         .append(
-          $('<p>')
+          $('<div class=testsuite-image-title>')
             .append($('<a>').text(image.name).attr('href', image.href))
-            .append($('<span>').text(' by ' + image.attribution)));
+            .append($('<span class=test-suite-image-attribution>').text(' by ' + image.attribution)));
   }));
 
   var totalTime = 0;
@@ -38,7 +38,7 @@ $.getJSON('images/images.json', function(images) {
         if (processed[img.src]) return;
         processed[img.src] = true;
         var t = performance.now();
-        smartCrop.crop(img, options, function(result) {
+        smartcrop.crop(img, options, function(result) {
           totalTime += (performance.now() - t) / 1e3;
           totalmpix += (img.naturalWidth * img.naturalHeight) / 1e6;
           totalCrops++;
@@ -55,9 +55,9 @@ $.getJSON('images/images.json', function(images) {
 
           $(img)
             .after(canvas)
-            .after(smartCrop.debugDraw(result, true))
+            .after(smartcrop.debugDraw(result, true))
             .parent()
-            .append($('<p>').text(JSON.stringify(crop.score)));
+            .append($('<pre>').text(JSON.stringify(crop.score)));
         });
       }.bind(this), 100);
     });

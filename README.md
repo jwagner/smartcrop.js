@@ -18,14 +18,19 @@ Smartcrop.js works using fairly dumb image processing. In short:
 1. Find regions high in saturation
 1. Generate a set of candidate crops using a sliding window
 1. Rank them using an importance function to focus the detail in the center
-  and avoid it in the edges. 
+  and avoid it in the edges.
 1. Output the candidate crop with the highest rank
 
 
 ## Simple Example
 ```javascript
-SmartCrop.crop(image, {width: 100, height: 100}, function(result){console.log(result);});
-// {topCrop: {x: 300, y: 200, height: 200, width: 200}}
+smartcrop.crop(image, {width: 100, height: 100}).then(function(result){
+  console.log(result);
+});
+```
+Output:
+```javascript
+{topCrop: {x: 300, y: 200, height: 200, width: 200}}
 ```
 
 ## Download/ Installation
@@ -34,41 +39,52 @@ or
 ```bower install smartcrop```
 or just download [smartcrop.js](https://raw.githubusercontent.com/jwagner/smartcrop.js/master/smartcrop.js) from the git repo.
 
+Smarcrop requires support for [Promises](http://caniuse.com/#feat=promises),
+use a [polyfill](https://github.com/taylorhakes/promise-polyfill) for unsupported browsers or set `smartcrop.Promise` to your promise implementation
+(I recommend [bluebird](http://bluebirdjs.com/)).
+
+
 ## CLI / Node.js
-The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js. It is based on node.js and node-canvas. You can also view it as an example on how to use smartcrop.js from a node.js app.
+The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js. It also serves as an example on how to use smartcrop
+from node.
 
 ## Module Formats
 
-Supported:
 * common js
 * amd
 * global export / window
 
 ## Supported Browsers
+
 See [caniuse.com/canvas](http://caniuse.com/canvas)
+A [polyfill](https://github.com/taylorhakes/promise-polyfill) for
+[Promises](http://caniuse.com/#feat=promises) is recommended.
 
 ## API
 
-The API is not yet finalized. Look at the code for details and expect changes.
+The API is not yet finalized, expect changes.
 
-### SmartCrop.crop(image, options, callback)
-Crop image using options and call callback(result) when done.
+### smartcrop.crop(image, options)
+Find the best crop for *image* using *options*.
 
-**image:** anything ctx.drawImage() accepts, usually HTMLImageElement, HTMLCanvasElement or HTMLVideoElement. Keep in mind that [origin policies](https://en.wikipedia.org/wiki/Same-origin_policy) apply to the image source, and you may not use cross-domain images without [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
+**image:** anything ctx.drawImage() accepts, usually HTMLImageElement, HTMLCanvasElement or HTMLVideoElement.
 
-**options:** see cropOptions
+Keep in mind that [origin policies](https://en.wikipedia.org/wiki/Same-origin_policy) apply to the image source.
+You may not use cross-domain images without [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) clearance.
 
-**callback:** function(cropResult)
+**options:** [cropOptions](#cropOptions)
+
+**returns:** A promise for a [cropResult](#cropResult).
 
 ### cropOptions
 
-**debug:** if true, cropResults will contain a debugCanvas
-
 **minScale:** minimal scale of the crop rect, set to 1.0 to prevent smaller than necessary crops (lowers the risk of chopping things off).
 
-**width:** width of the crop you want to use. 
+**width:** width of the crop you want to use.
 
 **height:** height of the crop you want to use.
+
+**debug *(internal)*:** if true, cropResults will contain a debugCanvas.
 
 There are many more (for now undocumented) options available. Check the [source](smartcrop.js#L32) and know that they might change in the future.
 
@@ -82,16 +98,16 @@ There are many more (for now undocumented) options available. Check the [source]
 ### crop
 ```javascript
 {
-  x: 1,
-  y: 1,
-  width: 1,
-  height: 1
+  x: 11, // pixels from the left side
+  y: 20, // pixels from the top
+  width: 1, // pixels
+  height: 1 // pixels
 }
 ```
 
 ## Tests
 
-You can run the tests using grunt test. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/. 
+You can run the tests using grunt test. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/.
 The test coverage for smartcrop.js is very limited at the moment. I expect to improve this as the code matures and the concepts solidify.
 
 ## Benchmark
