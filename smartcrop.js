@@ -28,13 +28,13 @@
 
 
 
-var smartCrop = {};
+var smartcrop = {};
 // promise implementation to use
-smartCrop.Promise = typeof Promise !== 'undefined' ? Promise : function(){
-    throw new Error('No native promises and smartCrop.promise not set.');
+smartcrop.Promise = typeof Promise !== 'undefined' ? Promise : function(){
+    throw new Error('No native promises and smartcrop.promise not set.');
 };
 
-smartCrop.DEFAULTS = {
+smartcrop.DEFAULTS = {
     width: 0,
     height: 0,
     aspect: 0,
@@ -71,8 +71,8 @@ smartCrop.DEFAULTS = {
 
 
 
-smartCrop.crop = function(inputImage, options_, callback){
-   var options = extend({}, smartCrop.DEFAULTS, options_);
+smartcrop.crop = function(inputImage, options_, callback){
+   var options = extend({}, smartcrop.DEFAULTS, options_);
     if(options.aspect){
         options.width = options.aspect;
         options.height = 1;
@@ -127,8 +127,8 @@ smartCrop.crop = function(inputImage, options_, callback){
 
 // check if all the dependencies are there
 // todo:
-smartCrop.isAvailable = function(options){
-    if(!smartCrop.Promise) return false;
+smartcrop.isAvailable = function(options){
+    if(!smartcrop.Promise) return false;
     var canvasFactory = options ? options.canvasFactory : defaultCanvasFactory;
     if(canvasFactory === defaultCanvasFactory){
         var c = document.createElement('canvas');
@@ -304,7 +304,7 @@ function analyse(options, input){
     if(options.debug && topCrop){
         result.debugOutput = output;
         result.debugOptions = options;
-        // create a copy which will not be adjusted by the post scaling of smartCrop.crop
+        // create a copy which will not be adjusted by the post scaling of smartcrop.crop
         result.debugTopCrop = extend({}, result.topCrop);
     }
     return result;
@@ -345,7 +345,7 @@ function debugDraw(result, showCrop){
     }
     return canvas;
 }
-smartCrop.debugDraw = debugDraw;
+smartcrop.debugDraw = debugDraw;
 
 function ImgData(width, height, data){
     this.width = width;
@@ -408,7 +408,7 @@ function downSample(input, factor){
     }
     return output;
 }
-smartCrop._downSample = downSample;
+smartcrop._downSample = downSample;
 
 function defaultCanvasFactory(w, h){
     var c = document.createElement('canvas');
@@ -437,7 +437,7 @@ function canvasImageOperations(canvasFactory) {
                 c.height = image.height;
             }
             ctx.drawImage(image, 0, 0);
-            return smartCrop.Promise.resolve(c);
+            return smartcrop.Promise.resolve(c);
         },
         // takes an image (as returned by open), and changes it's size by resampling
         resample: function(image, width, height) {
@@ -446,7 +446,7 @@ function canvasImageOperations(canvasFactory) {
                     ctx = c.getContext('2d');
 
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
-                return smartCrop.Promise.resolve(c);
+                return smartcrop.Promise.resolve(c);
             });
         },
         getData: function(image) {
@@ -502,13 +502,13 @@ function saturation(r, g, b){
 }
 
 // amd
-if (typeof define !== 'undefined' && define.amd) define(function(){return smartCrop;});
+if (typeof define !== 'undefined' && define.amd) define(function(){return smartcrop;});
 //common js
-if (typeof exports !== 'undefined') exports.smartCrop = smartCrop;
+if (typeof exports !== 'undefined') exports.smartcrop = smartcrop;
 // browser
-else if (typeof navigator !== 'undefined') window.SmartCrop = window.smartCrop = smartCrop;
+else if (typeof navigator !== 'undefined') window.SmartCrop = window.smartcrop = smartcrop;
 // nodejs
 if (typeof module !== 'undefined') {
-    module.exports = smartCrop;
+    module.exports = smartcrop;
 }
 })();
