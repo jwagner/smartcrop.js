@@ -28,7 +28,7 @@ function handleFiles(files){
 
 
 load('images/flickr/kitty.jpg');
-$('input[type=range]').change(_.debounce(function(){
+$('input[type=range]').on('input', _.debounce(function(){
     $(this).next('.value').text($(this).val());
     analyze();
 }));
