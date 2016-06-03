@@ -129,4 +129,4 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 * [smartcrop-rails](https://github.com/sadiqmmm/smartcrop-rails) smartcrop wrapped in a ruby gem by [Mohammed Sadiq](https://github.com/sadiqmmm/)
 
 ## License
-Copyright (c) 2014 Jonas Wanger, licensed under the MIT License (enclosed)
+Copyright (c) 2016 Jonas Wagner, licensed under the MIT License (enclosed)
