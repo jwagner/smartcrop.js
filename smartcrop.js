@@ -84,9 +84,10 @@ smartcrop.crop = function(inputImage, options_, callback) {
 
   var iop = options.imageOperations;
 
+  var scale = 1;
+  var prescale = 1;
+
   return iop.open(inputImage).then(function(image) {
-    var scale = 1;
-    var prescale = 1;
 
     if (options.width && options.height) {
       scale = min(image.width / options.width, image.height / options.height);
@@ -96,9 +97,7 @@ smartcrop.crop = function(inputImage, options_, callback) {
       // don't set minscale smaller than 1/scale
       // -> don't pick crops that need upscaling
       options.minScale = min(options.maxScale, max(1 / scale, options.minScale));
-    }
 
-    if (options.width && options.height) {
       if (options.prescale !== false) {
         prescale = 1 / scale / options.minScale;
         if (prescale < 1) {
@@ -111,9 +110,12 @@ smartcrop.crop = function(inputImage, options_, callback) {
         }
       }
     }
-
+    return image;
+  })
+  .then(function(image) {
     return iop.getData(image).then(function(data) {
       var result = analyse(options, data);
+
       for (var i = 0, iLen = result.crops.length; i < iLen; i++) {
         var crop = result.crops[i];
         crop.x = ~~(crop.x / prescale);
@@ -124,7 +126,6 @@ smartcrop.crop = function(inputImage, options_, callback) {
       if (callback) callback(result);
       return result;
     });
-
   });
 };
 
@@ -384,6 +385,7 @@ function ImgData(width, height, data) {
     this.data = new Uint8ClampedArray(width * height * 4);
   }
 }
+smartcrop.ImgData = ImgData;
 
 function downSampleCanvas(input, factor) {
   var c = document.createElement('canvas');
