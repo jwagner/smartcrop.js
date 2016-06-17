@@ -1,6 +1,6 @@
 {
   "name": "smartcrop",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Content aware image cropping.",
   "homepage": "https://github.com/jwagner/smartcrop.js",
   "author": "Jonas Wagner <jonas@29a.ch> (http://29a.ch/)",
