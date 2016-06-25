@@ -55,9 +55,9 @@ $.getJSON('images/images.json', function(images) {
 
           $(img)
             .after(canvas)
-            .after(debugDraw(result, true))
-            .parent()
-            .append($('<pre>').text(JSON.stringify(crop.score)));
+            .after(debugDraw(result, true));
+          //  .parent()
+          //  .append($('<pre>').text(JSON.stringify(crop.score)));
         });
       }.bind(this), 100);
     });
