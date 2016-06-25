@@ -8,7 +8,7 @@ Image: [https://www.flickr.com/photos/endogamia/5682480447/](https://www.flickr.
 
 ## Demos
 * [Test Suite](http://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
-* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images.
+* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images and different face detection libraries.
 * [Photo transitions](http://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creates Ken Burns transitions for a slide show.
 
 ## Algorithm Overview

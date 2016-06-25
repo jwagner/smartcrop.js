@@ -59,13 +59,15 @@ function run() {
     debug: true,
   };
 
-  if (form.faceDetection.value === 'tracking') {
+  var faceDetection = $('input[name=faceDetection]:checked', form).val();
+
+  if (faceDetection === 'tracking') {
     faceDetectionTracking(options, function() {
       analyze(options);
     });
 
   }
-  else if (form.faceDetection.value === 'jquery') {
+  else if (faceDetection === 'jquery') {
     faceDetectionJquery(options, function() {
       analyze(options);
     });
