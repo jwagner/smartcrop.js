@@ -13,7 +13,12 @@
         <input type=file name=file accept="image/*" >
         <label>Width<div><input name=width type="range" min=50 max=500 step=1 value=250 /><span class=value>250</span>px</div></label>
         <label>Height<div><input name=height type="range" min=50 max=500 step=1 value=250 /><span class=value>250</span>px</div></label>
-        <label>minScale<div><input name=minScale type="range" min=0.5 max=1.0 step=0.1 value=0.9 /><span class=value>0.9</span></div></label>
+        <label>minScale<div><input name=minScale type="range" min=0.5 max=1.0 step=0.1 value=1 /><span class=value>1.0</span></div></label>
+        <p><label>Rule of thirds<input name=ruleOfThirds type="checkbox" value=1 checked /></label></p>
+        <p><strong>Face Detection</strong></p>
+        <div><label><input name=faceDetection type=radio value=off checked />Off</label></div>
+        <div><label><input name=faceDetection type=radio value=jquery />Use <a href="http://facedetection.jaysalvat.com/">jquery.facedetection</a></label></div>
+        <div><label><input name=faceDetection type=radio value=tracking />Use <a href="https://trackingjs.com/">tracking.js</a></label></div>
     </form>
     </div>
     <h2>Drop images on this page to analyze them.</h2>
@@ -28,6 +33,10 @@
     <script src=jquery.js></script>
     <script src=underscore.js></script>
     <script src="../smartcrop.js"></script>
+    <script src=smartcrop-debug.js></script>
+    <script src=tracking-min.js></script>
+    <script src=tracking-face-min.js></script>
+    <script src=jquery.facedetection.min.js></script>
     <script src=testbed.js>
     </script>
     <script>
@@ -36,7 +45,7 @@
       _gaq.push(['_setDomainName', '29a.ch']);
       _gaq.push(['_setSiteSpeedSampleRate', 50]);
       _gaq.push(['_trackPageview']);
-      
+
     </script>
     <script src="//www.google-analytics.com/ga.js" async></script>
 </body>

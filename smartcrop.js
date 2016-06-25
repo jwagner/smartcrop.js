@@ -2,7 +2,7 @@
  * smartcrop.js
  * A javascript library implementing content aware image cropping
  *
- * Copyright (C) 2014 Jonas Wagner
+ * Copyright (C) 2016 Jonas Wagner
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -55,11 +55,12 @@ smartcrop.DEFAULTS = {
   scoreDownSample: 8,
   step: 8,
   scaleStep: 0.1,
-  minScale: 0.9,
+  minScale: 1.0,
   maxScale: 1.0,
   edgeRadius: 0.4,
   edgeWeight: -20.0,
   outsideImportance: -0.5,
+  boostWeight: 100.0,
   ruleOfThirds: true,
   prescale: true,
   imageOperations: null,
@@ -104,6 +105,17 @@ smartcrop.crop = function(inputImage, options_, callback) {
           image = iop.resample(image, image.width * prescale, image.height * prescale);
           options.cropWidth = ~~(options.cropWidth * prescale);
           options.cropHeight = ~~(options.cropHeight * prescale);
+          if (options.boost) {
+            options.boost = options.boost.map(function(boost) {
+              return {
+                x: ~~(boost.x * prescale),
+                y: ~~(boost.y * prescale),
+                width: ~~(boost.width * prescale),
+                height: ~~(boost.height * prescale),
+                weight: boost.weight
+              };
+            });
+          }
         }
         else {
           prescale = 1;
@@ -116,8 +128,9 @@ smartcrop.crop = function(inputImage, options_, callback) {
     return iop.getData(image).then(function(data) {
       var result = analyse(options, data);
 
-      for (var i = 0, iLen = result.crops.length; i < iLen; i++) {
-        var crop = result.crops[i];
+      var crops = result.crops || [result.topCrop];
+      for (var i = 0, iLen = crops.length; i < iLen; i++) {
+        var crop = crops[i];
         crop.x = ~~(crop.x / prescale);
         crop.y = ~~(crop.y / prescale);
         crop.width = ~~(crop.width / prescale);
@@ -222,6 +235,33 @@ function saturationDetect(options, i, o) {
   }
 }
 
+function applyBoosts(options, output) {
+  if (!options.boost) return;
+  var od = output.data;
+  for (var i = 0; i < output.width; i += 4) {
+    od[i + 3] = 0;
+  }
+  for (i = 0; i < options.boost.length; i++) {
+    applyBoost(options.boost[i], options, output);
+  }
+}
+
+function applyBoost(boost, options, output) {
+  var od = output.data;
+  var w = output.width;
+  var x0 = ~~boost.x;
+  var x1 = ~~(boost.x + boost.width);
+  var y0 = ~~boost.y;
+  var y1 = ~~(boost.y + boost.height);
+  var weight = boost.weight * 255;
+  for (var y = y0; y < y1; y++) {
+    for (var x = x0; x < x1; x++) {
+      var i = (y * w + x) * 4;
+      od[i + 3] += weight;
+    }
+  }
+}
+
 function generateCrops(options, width, height) {
   var results = [];
   var minDimension = min(width, height);
@@ -247,8 +287,10 @@ function score(options, output, crop) {
     detail: 0,
     saturation: 0,
     skin: 0,
+    boost: 0,
     total: 0,
   };
+
   var od = output.data;
   var downSample = options.scoreDownSample;
   var invDownSample = 1 / downSample;
@@ -265,13 +307,14 @@ function score(options, output, crop) {
       result.skin += od[p] / 255 * (detail + options.skinBias) * i;
       result.detail += detail * i;
       result.saturation += od[p + 2] / 255 * (detail + options.saturationBias) * i;
+      result.boost += od[p + 3] / 255 * i;
     }
-
   }
 
   result.total = (result.detail * options.detailWeight +
                   result.skin * options.skinWeight +
-                  result.saturation * options.saturationWeight) / (crop.width * crop.height);
+                  result.saturation * options.saturationWeight +
+                  result.boost * options.boostWeight) / (crop.width * crop.height);
   return result;
 }
 
@@ -293,6 +336,7 @@ function importance(options, crop, x, y) {
   }
   return s + d;
 }
+smartcrop.importance = importance;
 
 function skinColor(options, r, g, b) {
   var mag = sqrt(r * r + g * g + b * b);
@@ -306,9 +350,11 @@ function skinColor(options, r, g, b) {
 function analyse(options, input) {
   var result = {};
   var output = new ImgData(input.width, input.height);
+
   edgeDetect(input, output);
   skinDetect(options, input, output);
   saturationDetect(options, input, output);
+  applyBoosts(options, output);
 
   var scoreOutput = downSample(output, options.scoreDownSample);
 
@@ -326,10 +372,10 @@ function analyse(options, input) {
 
   }
 
-  result.crops = crops;
   result.topCrop = topCrop;
 
   if (options.debug && topCrop) {
+    result.crops = crops;
     result.debugOutput = output;
     result.debugOptions = options;
     // Create a copy which will not be adjusted by the post scaling of smartcrop.crop
@@ -337,43 +383,6 @@ function analyse(options, input) {
   }
   return result;
 }
-
-function debugDraw(result, showCrop) {
-  var topCrop = result.debugTopCrop;
-  var options = result.debugOptions;
-  var output = result.debugOutput;
-  var canvas = options.canvasFactory(output.width, output.height);
-  var ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
-  ctx.fillRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
-  var debugOutput = ctx.createImageData(output.width, output.height);
-  debugOutput.data.set(output.data);
-  for (var y = 0; y < output.height; y++) {
-    for (var x = 0; x < output.width; x++) {
-      var p = (y * output.width + x) * 4;
-      if (showCrop) {
-        var I = importance(options, topCrop, x, y);
-        if (I > 0) {
-          debugOutput.data[p + 1] += I * 32;
-        }
-
-        if (I < 0) {
-          debugOutput.data[p] += I * -64;
-        }
-      }
-      debugOutput.data[p + 3] = 255;
-    }
-  }
-
-
-  ctx.putImageData(debugOutput, 0, 0);
-  ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
-  if (showCrop) {
-    ctx.strokeRect(topCrop.x, topCrop.y, topCrop.width, topCrop.height);
-  }
-  return canvas;
-}
-smartcrop.debugDraw = debugDraw;
 
 function ImgData(width, height, data) {
   this.width = width;

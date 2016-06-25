@@ -37,18 +37,27 @@ describe('smartcrop', function() {
         expect(result.topCrop.y + result.topCrop.height).to.be.greaterThan(48);
       });
     });
-    it('should adhere to minScale', function(done) {
-      smartcrop.crop(img, {minScale: 1}, function(result) {
+    it('should adhere to minScale', function() {
+      return smartcrop.crop(img, {minScale: 1}, function(result) {
         validResult(result);
         expect(result.topCrop.y).to.equal(0);
         expect(result.topCrop.height).to.equal(img.height);
-        done();
       });
     });
-    it('should crop the kitty', function(done) {
-      smartcrop.crop(img, {}, function(result) {
+    it('should take into account boost', function() {
+      var boost = [{x : img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
+      console.log(img.width, img.height);
+      return smartcrop.crop(img, {boost: boost}, function(result) {
         validResult(result);
-        done();
+        expect(result.topCrop.y).to.equal(0);
+        expect(result.topCrop.x).to.equal(208);
+        expect(result.topCrop.height).to.equal(img.height);
+      });
+    });
+
+    it('should crop the kitty', function() {
+      return smartcrop.crop(img, {}, function(result) {
+        validResult(result);
       });
     });
   });
