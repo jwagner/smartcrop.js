@@ -5,22 +5,33 @@
 <link rel=stylesheet href=style.css>
 </head>
 
-<body>
+<body class=testsuite>
     <h1>smartcrop.js test page</h1>
-    <p>smartcrop.js is a content aware image cropping library. On this page you can see how it operates on a large set of (&gt;100) images. This page is designed to show you both the strengths and weaknesses of this open source library. You can learn more about the library on it's <a href="https://github.com/jwagner/smartcrop.js/">github page</a>. You can try it out on your on images using the <a href="testbed.html">testbed</a></p>
+    <p>smartcrop.js is a content aware image cropping library.
+      On this page you can see how it operates on a large set of (&gt;100) images.
+      This page is designed to show you both the strengths and weaknesses of this open source library.
+      Please note that this page is running just smartcrop.js without any additional face detection.
+      You can play with face detection in the <a href="testbed.html">testbed</a>.
+    </p>
+    <p>
+      You can learn more about the library on it's <a href="https://github.com/jwagner/smartcrop.js/">github page</a>.
+      You can try it out on your on images using the <a href="testbed.html">testbed</a></p>
     <p id=perf></p>
-    <div>
-    <img src=images/flickr/img.jpg>
-    </div>
-    <p><a href="https://www.flickr.com/photos/80225884@N06/13318614973/">Me</a> by Myself ;)</p>
+    <div><img src=images/flickr/img.jpg></div>
+    <div class=testsuite-image-title><a href="https://www.flickr.com/photos/80225884@N06/13318614973/">Selfie</a>
+      by <span class=testsuite-image-attribution><a href="https://29a.ch/">Myself</a> ;)</span></div>
     <div><img src=images/flickr/kitty.jpg></div>
-    <p><a href="https://www.flickr.com/photos/11250735@N07/8561945042/">Cats in the Spring</a> by ziamoku_woodpile</p>
+    <div class=testsuite-image-title><a href="https://www.flickr.com/photos/11250735@N07/8561945042/">Cats in the Spring</a>
+      by <span class=testsuite-image-attribution>ziamoku_woodpile</span></div>
     <div><img src=images/flickr/guitarist.jpg></div>
-    <p><a href="https://www.flickr.com/photos/64654599@N00/7185037375/">Kitty, Daisy and Lewis at the Garage</a> by Paul Hudson</>
+    <div class=testsuite-image-title><a href="https://www.flickr.com/photos/64654599@N00/7185037375/">Kitty, Daisy and Lewis at the Garage</a>
+      by <span class=testsuite-image-attribution>Paul Hudson</span></div>
     <div><img src=images/flickr/goodtimes.jpg></div>
-    <p><a href="https://www.flickr.com/photos/endogamia/5682480447/">Where Have All the Good Times Gone?</a> by N. Feans</p>
+    <div class=testsuite-image-title><a href="https://www.flickr.com/photos/endogamia/5682480447/">Where Have All the Good Times Gone?</a>
+      by <span class=testsuite-image-attribution>N. Feans</span></div>
     <script src=jquery.js></script>
     <script src="../smartcrop.js"></script>
+    <script src=smartcrop-debug.js></script>
     <script src=testsuite.js>
 
     </script>
@@ -30,7 +41,7 @@
       _gaq.push(['_setDomainName', '29a.ch']);
       _gaq.push(['_setSiteSpeedSampleRate', 50]);
       _gaq.push(['_trackPageview']);
-      
+
     </script>
     <script src="//www.google-analytics.com/ga.js" async></script>
 </body>

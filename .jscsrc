@@ -1,0 +1,8 @@
+{
+	"preset": "node-style-guide",
+	"maximumLineLength": 120,
+	"requireCurlyBraces": null,
+    "requireCapitalizedComments": null,
+    "requireTrailingComma": null,
+    "disallowKeywordsOnNewLine": null
+}
