@@ -9,6 +9,30 @@ module.exports = function(config) {
       platform: 'Windows 10',
       version: 'latest'
     },
+    sauceFirefoxLatest: {
+      base: 'SauceLabs',
+      browserName: 'firefox',
+      platform: 'Windows 10',
+      version: 'latest'
+    },
+    sauceIE: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      platform: 'Windows 8.1',
+      version: '11'
+    },
+    sauceEdge: {
+      base: 'SauceLabs',
+      browserName: 'MicrosoftEdge',
+      platform: 'Windows 10',
+      version: 'latest'
+    },
+    sauceSafari: {
+      base: 'SauceLabs',
+      browserName: 'safari',
+      platform: 'OS X 10.11',
+      version: 'latest'
+    }
     // sl_firefox: {
     //   base: 'SauceLabs',
     //   browserName: 'firefox',
@@ -41,6 +65,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/promise-polyfill/promise.js',
       'node_modules/chai/chai.js',
       'smartcrop.js',
       'test/smartcrop.js',
@@ -66,7 +91,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'saucelabs'],
 
 
     // web server port
