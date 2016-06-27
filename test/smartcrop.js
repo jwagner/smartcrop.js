@@ -1,4 +1,7 @@
 (function() {
+mocha.setup('bdd');
+var expect = chai.expect;
+
 var KITTY = '/examples/images/flickr/kitty.jpg';
 describe('smartcrop', function() {
   var img;

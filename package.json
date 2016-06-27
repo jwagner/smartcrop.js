@@ -13,6 +13,10 @@
     "grunt-contrib-connect": "~0.7.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-rsync": "~0.5.0",
+    "karma": "^1.1.0",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.1.1",
+    "karma-sauce-launcher": "^1.0.0",
     "microtime": "^2.0.0",
     "mocha": "^1.18.2"
   },
@@ -20,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/jwagner/smartcrop.js.git"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/karma start karma.conf.js"
   }
 }

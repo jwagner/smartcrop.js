@@ -396,23 +396,6 @@ function ImgData(width, height, data) {
 }
 smartcrop.ImgData = ImgData;
 
-function downSampleCanvas(input, factor) {
-  var c = document.createElement('canvas');
-  c.width = input.width;
-  c.height = input.height;
-  var ctx = c.getContext('2d');
-  var id = ctx.createImageData(c.width, c.height);
-  id.data.set(input.data);
-  for (var i = 0; i < id.data.length; i += 4) {
-    id.data[i + 3] = 255;
-  }
-  ctx.putImageData(id, 0, 0);
-  var w = Math.ceil(input.width / factor);
-  var h = Math.ceil(input.height / factor);
-  ctx.drawImage(c, 0, 0, input.width, input.height, 0, 0, w, h);
-  return ctx.getImageData(0, 0, w, h);
-}
-
 function downSample(input, factor) {
   var idata = input.data;
   var iwidth = input.width;
