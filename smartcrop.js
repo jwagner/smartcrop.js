@@ -88,7 +88,7 @@ smartcrop.crop = function(inputImage, options_, callback) {
   var scale = 1;
   var prescale = 1;
 
-  return iop.open(inputImage).then(function(image) {
+  return iop.open(inputImage, options).then(function(image) {
 
     if (options.width && options.height) {
       scale = min(image.width / options.width, image.height / options.height);
