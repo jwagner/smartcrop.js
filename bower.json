@@ -20,6 +20,7 @@
     "test",
     "doc",
     "tests",
+    "karma.conf.js",
     "Gruntfile.js",
     "examples"
   ],

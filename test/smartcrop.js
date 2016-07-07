@@ -48,7 +48,7 @@ describe('smartcrop', function() {
       });
     });
     it('should take into account boost', function() {
-      var boost = [{x : img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
+      var boost = [{x: img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
       console.log(img.width, img.height);
       return smartcrop.crop(img, {boost: boost}, function(result) {
         validResult(result);
@@ -64,6 +64,28 @@ describe('smartcrop', function() {
       });
     });
   });
+  describe('iop', function() {
+    describe('open', function() {
+      it('passes input options', function() {
+        var iop = smartcrop._canvasImageOperations(smartcrop.DEFAULTS.canvasFactory);
+        var open = iop.open;
+        var inputOptions;
+        iop.open = function(image, inputOptions_) {
+          inputOptions = inputOptions_;
+          return open(image);
+        };
+        var options = {
+          imageOperations: iop,
+          input: {foo: 'bar'}
+        };
+        return smartcrop.crop(img, options, function(result) {
+          expect(inputOptions).to.equal(options.input);
+          validResult(result);
+        });
+      });
+    });
+  });
+
   describe('_downSample', function() {
     var input = {
       width: 4,
