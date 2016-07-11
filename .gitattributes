@@ -1,0 +1,8 @@
+.gitattributes export-ignore  
+.gitignore export-ignore
+karma.conf.js export-ignore
+Gruntfile.js export-ignore
+CONTRIBUTING.md export-ignore
+examples/images/*.jpg export-ignore
+scripts/ export-ignore
+
