@@ -1,7 +1,6 @@
 {
   "name": "smartcrop",
   "main": "smartcrop.js",
-  "version": "0.0.1",
   "authors": [
     "Jonas Wagner <jonas@29a.ch>"
   ],
