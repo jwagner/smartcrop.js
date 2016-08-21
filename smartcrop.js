@@ -30,7 +30,7 @@
 var smartcrop = {};
 // Promise implementation to use
 smartcrop.Promise = typeof Promise !== 'undefined' ? Promise : function() {
-  throw new Error('No native promises and smartcrop.promise not set.');
+  throw new Error('No native promises and smartcrop.Promise not set.');
 };
 
 smartcrop.DEFAULTS = {
