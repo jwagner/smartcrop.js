@@ -158,6 +158,9 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 
 ## Version history
 
+### 1.1.1
+Removed useless files from npm package.
+
 ### 1.1
 Creating github releases. Added options.input which is getting passed along to iop.open.
 
