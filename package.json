@@ -5,6 +5,9 @@
   "homepage": "https://github.com/jwagner/smartcrop.js",
   "author": "Jonas Wagner <jonas@29a.ch> (http://29a.ch/)",
   "main": "./smartcrop",
+  "files": [
+    "smartcrop.js"
+  ],
   "devDependencies": {
     "500px": "~0.3.2",
     "benchmark": "~1.0.0",
