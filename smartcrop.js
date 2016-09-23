@@ -88,8 +88,10 @@ smartcrop.crop = function(inputImage, options_, callback) {
   var scale = 1;
   var prescale = 1;
 
+  // open the image
   return iop.open(inputImage, options.input).then(function(image) {
 
+    // calculate desired crop based in image size
     if (options.width && options.height) {
       scale = min(image.width / options.width, image.height / options.height);
       options.cropWidth = ~~(options.width * scale);
@@ -99,8 +101,9 @@ smartcrop.crop = function(inputImage, options_, callback) {
       // -> don't pick crops that need upscaling
       options.minScale = min(options.maxScale, max(1 / scale, options.minScale));
 
+      // prescale if possible
       if (options.prescale !== false) {
-        prescale = 1 / scale / options.minScale;
+        prescale = min(max(256 / image.width, 256 / image.height), 1);
         if (prescale < 1) {
           image = iop.resample(image, image.width * prescale, image.height * prescale);
           options.cropWidth = ~~(options.cropWidth * prescale);
@@ -116,9 +119,6 @@ smartcrop.crop = function(inputImage, options_, callback) {
               };
             });
           }
-        }
-        else {
-          prescale = 1;
         }
       }
     }
@@ -297,26 +297,57 @@ function score(options, output, crop) {
   var outputHeightDownSample = output.height * downSample;
   var outputWidthDownSample = output.width * downSample;
   var outputWidth = output.width;
+  var area = (crop.width * crop.height);
 
   for (var y = 0; y < outputHeightDownSample; y += downSample) {
     for (var x = 0; x < outputWidthDownSample; x += downSample) {
       var p = (~~(y * invDownSample) * outputWidth + ~~(x * invDownSample)) * 4;
       var i = importance(options, crop, x, y);
       var detail = od[p + 1] / 255;
-
-      result.skin += od[p] / 255 * (detail + options.skinBias) * i;
-      result.detail += detail * i;
-      result.saturation += od[p + 2] / 255 * (detail + options.saturationBias) * i;
-      result.boost += od[p + 3] / 255 * i;
+      addScore(options, result, i, od[p] / 255, od[p + 1] / 255, od[p + 2] / 255, od[p + 3] / 255);
     }
   }
 
-  result.total = (result.detail * options.detailWeight +
-                  result.skin * options.skinWeight +
-                  result.saturation * options.saturationWeight +
-                  result.boost * options.boostWeight) / (crop.width * crop.height);
+  result.total = totalScore(options, result) / area;
   return result;
 }
+
+function fastScore(options, output, width, crop) {
+  var x0 = crop.x;
+  var x1 = crop.x + crop.width - 1;
+  var y0 = crop.y;
+  var y1 = crop.y + crop.height - 1;
+
+  var skin = integrateIntegralImage(output, width, 4, 0, x0, y0, x1, y1) / 255;
+  var detail = integrateIntegralImage(output, width, 4, 1, x0, y0, x1, y1) / 255;
+  var saturation = integrateIntegralImage(output, width, 4, 2, x0, y0, x1, y1) / 255;
+  var boost = integrateIntegralImage(output, width, 4, 3, x0, y0, x1, y1) / 255;
+  var result = {
+    detail: 0,
+    saturation: 0,
+    skin: 0,
+    boost: 0,
+    total: 0,
+  };
+  addScore(options, result, 1, skin, detail, saturation, boost);
+  var area = (crop.width * crop.height);
+  result.total = totalScore(options, result) / area;
+  return result;
+}
+
+function addScore(options, result, weight, skin, detail, saturation, boost) {
+  result.skin += skin * (detail + options.skinBias) * weight;
+  result.detail += detail * weight;
+  result.saturation += saturation * (detail + options.saturationBias) * weight;
+  result.boost += boost * weight;
+}
+
+function totalScore(options, result) {
+  return (result.detail * options.detailWeight +
+          result.skin * options.skinWeight +
+          result.saturation * options.saturationWeight +
+          result.boost * options.boostWeight);
+};
 
 function importance(options, crop, x, y) {
   if (crop.x > x || x >= crop.x + crop.width || crop.y > y || y >= crop.y + crop.height) {
@@ -350,13 +381,23 @@ function skinColor(options, r, g, b) {
 function analyse(options, input) {
   var result = {};
   var output = new ImgData(input.width, input.height);
+  var fast = true;
 
   edgeDetect(input, output);
   skinDetect(options, input, output);
   saturationDetect(options, input, output);
   applyBoosts(options, output);
 
-  var scoreOutput = downSample(output, options.scoreDownSample);
+  if (fast) {
+    var outputIntegralImage = new Float32Array(output.data.length);
+    integralImage(output.data, outputIntegralImage, output.width, 4, 0);
+    integralImage(output.data, outputIntegralImage, output.width, 4, 1);
+    integralImage(output.data, outputIntegralImage, output.width, 4, 2);
+    integralImage(output.data, outputIntegralImage, output.width, 4, 3);
+  }
+  else {
+    var scoreOutput = downSample(output, options.scoreDownSample);
+  }
 
   var topScore = -Infinity;
   var topCrop = null;
@@ -364,7 +405,13 @@ function analyse(options, input) {
 
   for (var i = 0, iLen = crops.length; i < iLen; i++) {
     var crop = crops[i];
-    crop.score = score(options, scoreOutput, crop);
+    if (fast) {
+      crop.score = fastScore(options, outputIntegralImage, output.width, crop);
+      console.log(crop);
+    }
+    else {
+      crop.score = score(options, scoreOutput, crop);
+    }
     if (crop.score.total > topScore) {
       topCrop = crop;
       topScore = crop.score.total;
@@ -395,6 +442,33 @@ function ImgData(width, height, data) {
   }
 }
 smartcrop.ImgData = ImgData;
+
+function integrateIntegralImage(input, width, xStride, offset, x0, y0, x1, y1) {
+  var yStride = width * xStride;
+  var a = x0 > 0 && y0 > 0 ? input[(y0 - 1) * yStride + (x0 - 1) * xStride + offset] : 0;
+  var b = y0 > 0 ? input[(y0 - 1) * yStride + x1 * xStride + offset] : 0;
+  var c = x0 > 0 ? input[y1 * yStride + (x0 - 1) * xStride + offset] : 0;
+  var d = input[y1 * yStride + x1 * xStride + offset];
+  return a + d - b - c;
+}
+smartcrop._integrateIntegralImage = integrateIntegralImage;
+
+function integralImage(input, output, width, xStride, xOffset) {
+  const yStride = width * xStride;
+  for (var y = 0; y < input.length; y += yStride) {
+    for (var x = 0; x < width; x ++) {
+      var i = y + x * xStride + xOffset;
+      let sum = input[i];
+      if (x > 0) sum += output[i - xStride];
+      if (y > 0) sum += output[i - yStride];
+      if (x > 0 && y > 0) {
+        sum -= output[i - xStride - yStride];
+      }
+      output[i] = sum;
+    }
+  }
+}
+smartcrop._integralImage = integralImage;
 
 function downSample(input, factor) {
   var idata = input.data;

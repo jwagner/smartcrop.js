@@ -8,8 +8,9 @@
   "devDependencies": {
     "500px": "~0.3.2",
     "benchmark": "~1.0.0",
-    "chai": "^1.9.1",
+    "chai": "^3.5.0",
     "grunt": "^0.4.4",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-connect": "~0.7.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-rsync": "~0.5.0",
@@ -18,8 +19,8 @@
     "karma-mocha": "^1.1.1",
     "karma-sauce-launcher": "^1.0.0",
     "microtime": "^2.0.0",
-    "mocha": "^1.18.2",
-    "promise-polyfill": "^5.2.1"
+    "mocha": "^3.0.2",
+    "promise-polyfill": "^6.0.2"
   },
   "license": "MIT",
   "repository": {
@@ -27,6 +28,7 @@
     "url": "https://github.com/jwagner/smartcrop.js.git"
   },
   "scripts": {
+    "start": "grunt",
     "test": "./node_modules/.bin/karma start karma.conf.js"
   }
 }

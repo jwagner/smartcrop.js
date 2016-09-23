@@ -86,6 +86,40 @@ describe('smartcrop', function() {
     });
   });
 
+  describe('_integralImage', function() {
+    it('creates an integral image', function() {
+      const input =  [1,9,2,9,3,9,
+                    2,9,3,9,4,9,
+                    3,9,4,9,5,9];
+      const output = [0,0,0,0,0,0,
+                    0,0,0,0,0,0,
+                    0,0,0,0,0,0];
+      const expected0 = [1,0,3,0,6,0,
+                    3,0,8,0,15,0,
+                    6,0,15,0,27,0];
+      const expected1 = [1,9,3,18,6,27,
+                    3,18,8,36,15,54,
+                    6,27,15,54,27,81];
+      smartcrop._integralImage(input, output, 3, 2, 0);
+      expect(output).to.deep.equal(expected0);
+
+      smartcrop._integralImage(input, output, 3, 2, 1);
+      console.log(output);
+      expect(output).to.deep.equal(expected1);
+    });
+  });
+
+  describe('_integrateIntegralImage', function() {
+    it('integrates the values under the area', function() {
+      const image = [1,9,3,18,6,27,
+                    3,18,8,36,15,54,
+                    6,27,15,54,27,81];
+      expect(smartcrop._integrateIntegralImage(image, 3, 2, 0, 1, 1, 2, 2)).to.equal(16);
+      expect(smartcrop._integrateIntegralImage(image, 3, 2, 0, 0, 0, 2, 2)).to.equal(27);
+      expect(smartcrop._integrateIntegralImage(image, 3, 2, 1, 0, 0, 2, 2)).to.equal(81);
+    });
+  });
+
   describe('_downSample', function() {
     var input = {
       width: 4,
