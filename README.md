@@ -160,6 +160,11 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 
 ## Version history
 
+### 2.0.0 (beta)
+In short: It's a lot faster when calculating bigger crops.
+The quality of the crops should be comparable but the could be radically different,
+so this will be a major release.
+
 ### 1.1.1
 Removed useless files from npm package.
 

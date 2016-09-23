@@ -88,8 +88,10 @@ smartcrop.crop = function(inputImage, options_, callback) {
   var scale = 1;
   var prescale = 1;
 
+  // open the image
   return iop.open(inputImage, options.input).then(function(image) {
 
+    // calculate desired crop dimensions based on the image size
     if (options.width && options.height) {
       scale = min(image.width / options.width, image.height / options.height);
       options.cropWidth = ~~(options.width * scale);
@@ -99,8 +101,9 @@ smartcrop.crop = function(inputImage, options_, callback) {
       // -> don't pick crops that need upscaling
       options.minScale = min(options.maxScale, max(1 / scale, options.minScale));
 
+      // prescale if possible
       if (options.prescale !== false) {
-        prescale = 1 / scale / options.minScale;
+        prescale = min(max(256 / image.width, 256 / image.height), 1);
         if (prescale < 1) {
           image = iop.resample(image, image.width * prescale, image.height * prescale);
           options.cropWidth = ~~(options.cropWidth * prescale);
