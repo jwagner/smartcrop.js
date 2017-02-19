@@ -152,6 +152,8 @@ In other words, it's fine to run it on one image, it's not cool to run it on an 
 ## Ports, Alternatives
 
 * [connect-thumbs](https://github.com/inadarei/connect-thumbs) Middleware for connect.js that supports smartcrop.js by [Irakli Nadareishvili](https://github.com/inadarei/connect-thumbs)
+* [smartcrop-java](https://github.com/QuadFlask/smartcrop-java) by [QuadFlask](https://github.com/QuadFlask/)
+* [smartcrop-android](https://github.com/QuadFlask/smartcrop-android) by [QuadFlask](https://github.com/QuadFlask/)
 * [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muehlhaeuser](https://github.com/muesli)
 * [smartcrop.py](https://github.com/hhatto/smartcrop.py) by [Hideo Hattori](http://www.hexacosa.net/about/)
 * [smartcrop-rails](https://github.com/sadiqmmm/smartcrop-rails) smartcrop wrapped in a ruby gem by [Mohammed Sadiq](https://github.com/sadiqmmm/)
