@@ -225,7 +225,7 @@ function saturationDetect(options, i, o) {
       var acceptableSaturation = sat > options.saturationThreshold;
       var acceptableLightness = lightness >= options.saturationBrightnessMin &&
           lightness <= options.saturationBrightnessMax;
-      if (acceptableLightness && acceptableLightness) {
+      if (acceptableSaturation && acceptableLightness) {
         od[p + 2] = (sat - options.saturationThreshold) * (255 / (1 - options.saturationThreshold));
       }
       else {
