@@ -74,10 +74,10 @@ describe('smartcrop', function() {
     });
     it('should take into account boost', function() {
       var boost = [{x: img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
-      return smartcrop.crop(img, {boost: boost}).then(function(result) {
+      return smartcrop.crop(img, {boost: boost, width: 64, height: 64}).then(function(result) {
         validResult(result);
         expect(result.topCrop.y).to.equal(0);
-        expect(result.topCrop.x).to.equal(208);
+        expect(result.topCrop.x).to.equal(200);
         expect(result.topCrop.height).to.equal(img.height);
       });
     });
