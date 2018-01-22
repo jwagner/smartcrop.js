@@ -11,7 +11,6 @@
   "devDependencies": {
     "500px": "~0.3.2",
     "benchmark": "^2.1.4",
-    "canvas": "^1.6.9",
     "chai": "^3.5.0",
     "grunt": "^0.4.4",
     "grunt-cli": "^1.2.0",
