@@ -42,6 +42,28 @@ describe('smartcrop', function() {
         expect(result.topCrop.y + result.topCrop.height).to.be.greaterThan(48);
       });
     });
+    it('should take into account ruleOfThirds', function() {
+      var c = document.createElement('canvas');
+      var ctx = c.getContext('2d');
+      c.width = 256;
+      c.height = 128;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 256, 128);
+      ctx.fillStyle = 'red';
+      ctx.fillRect(128, 24, 8, 80);
+      var optionsThirds = {width: 32, height: 32, ruleOfThirds: true, debug: true};
+      var optionsNoThirds = {width: 32, height: 32, ruleOfThirds: false, debug: true};
+      return smartcrop.crop(c, optionsThirds).then(function(resultThirds) {
+        return smartcrop.crop(c, optionsNoThirds).then(function(resultNoThirds) {
+          validResult(resultThirds);
+          validResult(resultNoThirds);
+          expectAspectRatio(resultNoThirds, 1);
+          expect(resultNoThirds.topCrop.x+resultNoThirds.topCrop.width/2).to.equal(128);
+          expect(resultThirds.topCrop.x+resultThirds.topCrop.width/2).to.equal(144);
+        });
+      });
+    });
+
     it('should adhere to minScale', function() {
       return smartcrop.crop(img, {minScale: 1}).then(function(result) {
         validResult(result);
