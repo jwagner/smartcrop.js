@@ -97,7 +97,7 @@ describe('smartcrop', function() {
       ]),
     };
     function mono2rgba(input) {
-      var output = new Uint8Array(input.length * 4);
+      var output = new Uint8ClampedArray(input.length * 4);
       for (var i = 0; i < input.length; i++) {
         output[i * 4] = input[i];
         output[i * 4 + 1] = input[i];
@@ -121,6 +121,7 @@ describe('smartcrop', function() {
       var output = smartcrop._downSample(input, 2);
       expect(output.width).to.equal(input.width / 2);
       expect(output.height).to.equal(input.height / 2);
+      console.log(output.data, expectedOutputData);
       expect(output.data).to.deep.equal(expectedOutputData);
     });
     it('keeps the a constant value constant', function() {

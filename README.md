@@ -64,11 +64,9 @@ The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) can be used as an 
 
 See [caniuse.com/canvas](http://caniuse.com/canvas).
 A [polyfill](https://github.com/taylorhakes/promise-polyfill) for
-[Promises](http://caniuse.com/#feat=promises) is recommended.
+[Promises](http://caniuse.com/#feat=promises) is recommended if you need to support old browsers.
 
 ## API
-
-The API is not yet finalized, expect changes.
 
 ### smartcrop.crop(image, options)
 Find the best crop for *image* using *options*.
@@ -108,7 +106,7 @@ Result of the promise returned by smartcrop.crop.
 ```
 
 ### crop
-An invididual crop.
+An individual crop.
 
 ```javascript
 {
@@ -162,8 +160,8 @@ In other words, it's fine to run it on one image, it's suboptimal to run it on a
 
 ### 2.0.0 (beta)
 In short: It's a lot faster when calculating bigger crops.
-The quality of the crops should be comparable but the could be radically different,
-so this will be a major release.
+The quality of the crops should be comparable but the results
+are going to be different so this will be a major release.
 
 ### 1.1.1
 Removed useless files from npm package.
