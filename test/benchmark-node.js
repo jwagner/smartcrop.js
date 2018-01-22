@@ -16,17 +16,7 @@ var benchmark = new Benchmark('SmartCrop.crop()', function(deferred){
         });
     }, {
         defer: true,
-        maxTime: 30,
-        onCycle: function(){
-            console.log(benchmark.toString());
-            console.log((1/(benchmark.stats.mean+benchmark.stats.moe)).toFixed(2));
-            console.log(benchmark.stats.mean.toFixed(3));
-        },
         onComplete: function(){
-            //console.log(benchmark.stats);
-            console.log((1/(benchmark.stats.mean+benchmark.stats.moe)).toFixed(2));
-            console.log((1/(benchmark.stats.mean)).toFixed(2));
-            console.log(benchmark.stats.mean);
             console.log(benchmark.toString());
         }
     }).run();

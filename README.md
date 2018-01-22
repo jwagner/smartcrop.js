@@ -142,8 +142,8 @@ The test coverage for smartcrop.js is very limited at the moment. I expect to im
 There are benchmarks for both the browser (test/benchmark.html) and node (node test/benchmark-node.js [requires node-canvas])
 both powered by [benchmark.js](http://benchmarkjs.com).
 
-If you just want some rough numbers: It takes **< 100 ms** to find a **square crop** of a **640x427px** picture on an i7.
-In other words, it's fine to run it on one image, it's not cool to run it on an entire gallery on page load.
+If you just want some rough numbers: It takes **< 20 ms** to find a **square crop** of a **640x427px** picture on an i7.
+In other words, it's fine to run it on one image, it's suboptimal to run it on an entire gallery on page load.
 
 ## Contributors
 
