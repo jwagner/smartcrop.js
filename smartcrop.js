@@ -2,7 +2,7 @@
  * smartcrop.js
  * A javascript library implementing content aware image cropping
  *
- * Copyright (C) 2016 Jonas Wagner
+ * Copyright (C) 2018 Jonas Wagner
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -50,7 +50,7 @@ smartcrop.DEFAULTS = {
   saturationBrightnessMax: 0.9,
   saturationThreshold: 0.4,
   saturationBias: 0.2,
-  saturationWeight: 0.3,
+  saturationWeight: 0.1,
   // Step * minscale rounded down to the next power of two should be good
   scoreDownSample: 8,
   step: 8,
@@ -228,7 +228,7 @@ function saturationDetect(options, i, o) {
       var acceptableSaturation = sat > options.saturationThreshold;
       var acceptableLightness = lightness >= options.saturationBrightnessMin &&
           lightness <= options.saturationBrightnessMax;
-      if (acceptableLightness && acceptableLightness) {
+      if (acceptableLightness && acceptableSaturation) {
         od[p + 2] = (sat - options.saturationThreshold) * (255 / (1 - options.saturationThreshold));
       }
       else {

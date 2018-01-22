@@ -49,7 +49,6 @@ describe('smartcrop', function() {
     });
     it('should take into account boost', function() {
       var boost = [{x: img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
-      console.log(img.width, img.height);
       return smartcrop.crop(img, {boost: boost}, function(result) {
         validResult(result);
         expect(result.topCrop.y).to.equal(0);
