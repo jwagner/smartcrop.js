@@ -429,7 +429,8 @@ function downSample(input, factor) {
           a += idata[j + 3];
           mr = Math.max(mr, idata[j]);
           mg = Math.max(mg, idata[j + 1]);
-          mb = Math.max(mb, idata[j + 2]);
+          // unused
+          // mb = Math.max(mb, idata[j + 2]);
         }
       }
       // this is some funky magic to preserve detail a bit more for

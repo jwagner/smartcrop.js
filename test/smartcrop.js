@@ -113,15 +113,13 @@ describe('smartcrop', function() {
       expect(output.data).to.deep.equal(input.data);
     });
 
-    xit('samples down an image by a factor of two', function() {
-      var expectedOutputData = mono2rgba([
-          (1 + 2 + 5 + 6) / 4, (3 + 4 + 7 + 8) / 4,
-          (9 + 8 + 5 + 4) / 4, (7 + 6 + 3 + 2) / 4,
-      ]);
+    it('samples down an image by a factor of two', function() {
+      var expectedOutputData = new Uint8ClampedArray(
+          [5, 4, 4, 4, 7, 6, 6, 6, 8, 7, 6, 6, 6, 5, 4, 4]
+      );
       var output = smartcrop._downSample(input, 2);
       expect(output.width).to.equal(input.width / 2);
       expect(output.height).to.equal(input.height / 2);
-      console.log(output.data, expectedOutputData);
       expect(output.data).to.deep.equal(expectedOutputData);
     });
     it('keeps the a constant value constant', function() {
