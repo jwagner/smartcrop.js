@@ -16,6 +16,9 @@ describe('smartcrop', function() {
     expect(result.topCrop.width).to.be.within(1, img.width);
     expect(result.topCrop.height).to.be.within(1, img.height);
   }
+  function expectAspectRatio(result, expected) {
+      expect(result.topCrop.width/result.topCrop.height).to.be.closeTo(expected, 0.01)
+  }
   describe('isAvailable', function() {
     it('should return true when canvas is available', function() {
       expect(smartcrop.isAvailable()).to.equal(true);
@@ -31,9 +34,8 @@ describe('smartcrop', function() {
       ctx.fillRect(0, 0, 128, 64);
       ctx.fillStyle = 'red';
       ctx.fillRect(96, 32, 16, 16);
-      return smartcrop.crop(c, {debug: false}).then(function(result) {
-        // document.body.appendChild(c);
-        // document.body.appendChild(result.debugCanvas);
+      return smartcrop.crop(c, {width: 32, height: 32}).then(function(result) {
+        expectAspectRatio(result, 1);
         expect(result.topCrop.x).to.be.lessThan(96);
         expect(result.topCrop.y).to.be.lessThan(32);
         expect(result.topCrop.x + result.topCrop.width).to.be.greaterThan(112);
@@ -41,24 +43,35 @@ describe('smartcrop', function() {
       });
     });
     it('should adhere to minScale', function() {
-      return smartcrop.crop(img, {minScale: 1}, function(result) {
+      return smartcrop.crop(img, {minScale: 1}).then(function(result) {
         validResult(result);
+        expectAspectRatio(result, 1);
         expect(result.topCrop.y).to.equal(0);
         expect(result.topCrop.height).to.equal(img.height);
       });
     });
     it('should take into account boost', function() {
       var boost = [{x: img.width - 128, y: img.height - 128, width: 64, height: 64, weight: 1.0}];
-      return smartcrop.crop(img, {boost: boost}, function(result) {
+      return smartcrop.crop(img, {boost: boost}).then(function(result) {
         validResult(result);
         expect(result.topCrop.y).to.equal(0);
         expect(result.topCrop.x).to.equal(208);
         expect(result.topCrop.height).to.equal(img.height);
       });
     });
+    it('should take into account the aspect ratio', function() {
+      return smartcrop.crop(img, {width: 128, height: 64}).then(function(result) {
+        validResult(result);
+        expectAspectRatio(result, 2.0/1);
+        return smartcrop.crop(img, {width: 160, height: 90}).then(function(result) {
+          validResult(result);
+          expectAspectRatio(result, 16/9);
+        });
+      });
+    });
 
     it('should crop the kitty', function() {
-      return smartcrop.crop(img, {}, function(result) {
+      return smartcrop.crop(img, {}).then(function(result) {
         validResult(result);
       });
     });
@@ -77,7 +90,7 @@ describe('smartcrop', function() {
           imageOperations: iop,
           input: {foo: 'bar'}
         };
-        return smartcrop.crop(img, options, function(result) {
+        return smartcrop.crop(img, options).then(function(result) {
           expect(inputOptions).to.equal(options.input);
           validResult(result);
         });
