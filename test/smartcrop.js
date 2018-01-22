@@ -122,7 +122,7 @@ describe('smartcrop', function() {
       expect(output.height).to.equal(input.height / 2);
       expect(output.data).to.deep.equal(expectedOutputData);
     });
-    it('keeps the a constant value constant', function() {
+    it('keeps a constant value constant', function() {
       var w = 59;
       var h = 23;
       var input = {
