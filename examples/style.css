@@ -33,7 +33,7 @@ input[type=range] {
 img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: auto; }
 
 .output {
-    width: 75%;
+    width: 50%;
     float: left;
 }
 
@@ -49,10 +49,9 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
 }
 
 .sidebar {
-    width: 25%;
+    width: 50%;
     float: left;
     height: 600px;
-    overflow: auto;
 }
 
 #slide, #prev-slide {
@@ -87,4 +86,32 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
     max-width: none;
     padding: 0;
     margin: 0;
+}
+
+.opencv-loading {
+  color: #666;
+  position: relative;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.opencv-loading:after {
+  content: '';
+  box-sizing: border-box;
+  display: inline-block;
+  width: 1ex;
+  height: 1ex;
+  margin-left: 1em;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  animation: spinner .6s linear infinite;
+}
+
+.drop {
+  background: #eee;
+  padding: 1em;
+  margin-bottom: 2em;
 }

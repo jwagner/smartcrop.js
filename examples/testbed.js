@@ -72,6 +72,11 @@ function run() {
       analyze(options);
     });
   }
+  else if (faceDetection === 'opencv') {
+    faceDetectionOpenCV(options, function() {
+      analyze(options);
+    });
+  }
   else {
     analyze(options);
   }
@@ -92,6 +97,41 @@ function prescaleImage(image, maxDimension, callback) {
     callback(result, scale);
   };
   result.src = canvas.toDataURL();
+}
+
+function faceDetectionOpenCV(options, callback) {
+  prescaleImage(img, 768, function(img, scale) {
+    var src = cv.imread(img);
+    var gray = new cv.Mat();
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+    var faces = new cv.RectVector();
+    var faceCascade = new cv.CascadeClassifier();
+    // load pre-trained classifiers
+    faceCascade.load('haarcascade_frontalface_default.xml');
+    console.log(faceCascade)
+    // detect faces
+    var msize = new cv.Size(0, 0);
+    // let c = document.createElement('canvas');
+    // cv.imshow(c, gray);
+    // document.body.appendChild(c)
+    faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
+    options.boost = [];
+    for (var i = 0; i < faces.size(); ++i) {
+      var face = faces.get(i);
+      options.boost.push({
+        x: face.x / scale,
+        y: face.y / scale,
+        width: face.width / scale,
+        height: face.height / scale,
+        weight: 1.0
+      });
+    }
+    src.delete();
+    gray.delete();
+    faceCascade.delete();
+    faces.delete();
+    callback();
+  });
 }
 
 function faceDetectionTracking(options, callback) {
@@ -171,5 +211,35 @@ function drawCrop(crop) {
   ctx.lineWidth = 4;
   ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
 }
+
+window.openCvReady = function() {
+  console.log('opencv code ready');
+  loadCascade(
+    'haarcascade_frontalface_default.xml',
+    'https://unpkg.com/opencv.js@1.2.1/tests/haarcascade_frontalface_default.xml',
+  function() {
+    console.log('opencv ready');
+    document.querySelector('.opencv-loading input').disabled = false
+    document.querySelector('.opencv-loading').className = '';
+  })
+}
+
+function loadCascade(path, url, callback) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        request.onload = function(ev) {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    let data = new Uint8Array(request.response);
+                    cv.FS_createDataFile('/', path, data, true, false, false);
+                    callback();
+                } else {
+                    self.printError('Failed to load ' + url + ' status: ' + request.status);
+                }
+            }
+        };
+        request.send();
+    };
 
 })();
