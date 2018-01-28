@@ -5,13 +5,47 @@
 Smartcrop.js implements an algorithm to find good crops for images.
 It can be used in the browser, in node or via a CLI.
 
-![Example](http://29a.ch/sandbox/2014/smartcrop/example.jpg)
+![Example](https://29a.ch/sandbox/2014/smartcrop/example.jpg)
 Image: [https://www.flickr.com/photos/endogamia/5682480447/](https://www.flickr.com/photos/endogamia/5682480447) by N. Feans
 
 ## Demos
-* [Test Suite](http://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
-* [Test Bed](http://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images and different face detection libraries.
-* [Photo transitions](http://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creates Ken Burns transitions for a slide show.
+* [Smartcrop.js Test Suite](https://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
+* [Smartcrop.js Test Bed](https://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images and different face detection libraries.
+* [Automatic Photo transitions](https://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creates Ken Burns transitions for a slide show.
+
+## Simple Example
+```javascript
+// you pass in an image as well as the width & height of the crop you
+// want to optimize.
+smartcrop.crop(image, {width: 100, height: 100}).then(function(result){
+  console.log(result);
+});
+```
+Output:
+```javascript
+// smartcrop will output you it's best guess for a crop
+// you can now use this data to crop the image.
+{topCrop: {x: 300, y: 200, height: 200, width: 200}}
+```
+
+## Download/ Installation
+`npm install smartcrop`
+or just download [smartcrop.js](https://raw.githubusercontent.com/jwagner/smartcrop.js/master/smartcrop.js) from the git repository.
+
+Smarcrop requires support for [Promises](http://caniuse.com/#feat=promises),
+use a [polyfill](https://github.com/taylorhakes/promise-polyfill) for unsupported browsers or set `smartcrop.Promise` to your favorite promise implementation
+(I recommend [bluebird](http://bluebirdjs.com/)).
+
+## Command Line Interface
+The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js.
+
+## Node
+You can use smartcrop from nodejs via either [smartcrop-gm](https://github.com/jwagner/smartcrop-gm) (which is using image magick via gm) or [smartcrop-sharp](https://github.com/jwagner/smartcrop-sharp) (which is using libvips via sharp).
+The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) can be used as an example of using smartcrop from node.
+
+## Stability
+While *smartcrop.js* is a small personal project it is currently being used on high traffic production sites.
+It has basic automated tests and a test coverage of close to 100% and the code is short enough to perform a quick review yourself if in any doubt.
 
 ## Algorithm Overview
 Smartcrop.js works using fairly dumb image processing. In short:
@@ -25,34 +59,28 @@ Smartcrop.js works using fairly dumb image processing. In short:
   and avoid it in the edges.
 1. Output the candidate crop with the highest rank
 
+## Face detection
+The smartcrop algorithm itself is designed to be simple, relatively fast, small and generic.
 
-## Simple Example
-```javascript
-smartcrop.crop(image, {width: 100, height: 100}).then(function(result){
-  console.log(result);
-});
-```
-Output:
-```javascript
-{topCrop: {x: 300, y: 200, height: 200, width: 200}}
-```
+In many cases it does make sense to add face detection to it to ensure faces get the priority they deserve.
 
-## Download/ Installation
-```npm install smartcrop```
-or
-```bower install smartcrop```
-or just download [smartcrop.js](https://raw.githubusercontent.com/jwagner/smartcrop.js/master/smartcrop.js) from the git repository.
+There are multiple javascript libraries which can be easily integrated into smartcrop.js.
 
-Smarcrop requires support for [Promises](http://caniuse.com/#feat=promises),
-use a [polyfill](https://github.com/taylorhakes/promise-polyfill) for unsupported browsers or set `smartcrop.Promise` to your favorite promise implementation
-(I recommend [bluebird](http://bluebirdjs.com/)).
+* [ccv js](https://github.com/liuliu/ccv) / [jquery.facedetection](http://facedetection.jaysalvat.com/)
+* [tracking.js](https://trackingjs.com/examples/face_hello_world.html)
+* [opencv.js](https://docs.opencv.org/3.3.1/d5/d10/tutorial_js_root.html)
+* [node-opencv](https://github.com/peterbraden/node-opencv)
 
-## Command Line Interface
-The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js.
+You can experiment with all of these in the [smartcrop.js testbed](https://29a.ch/sandbox/2014/smartcrop/examples/testbed.html)
 
-## Node
-You can use smartcrop from nodejs via either [smartcrop-gm](https://github.com/jwagner/smartcrop-gm) (which is using image magick via gm) or [smartcrop-sharp](https://github.com/jwagner/smartcrop-sharp) (which is using libvips via sharp).
-The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) can be used as an example of using smartcrop from node.
+On the client side I would recommend using tracking.js because it's small and simple. Opencv.js is compiled from c++ and very heavy (~7.6MB of javascript + 900kb of data).
+jquery.facedetection has dependency on jquery and from my limited experience seems to perform worse than the others.
+
+On the server side node-opencv can be quicker but comes with some [annoying issues](https://github.com/peterbraden/node-opencv/issues/415) as well.
+
+It's also worth noting that all of these libraries are based on the now dated [viola-jones](https://en.wikipedia.org/wiki/Viola%E2%80%93Jones_object_detection_framework) object detection framework.
+It would be interesting to see how more [state of the art](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/WiderFace_Results.html) techniques could be implemented in browser friendly javascript.
+
 
 ## Supported Module Formats
 
@@ -131,10 +159,8 @@ into account faces in the image. See [smartcrop-cli](https://github.com/jwagner/
 }
 ```
 
-
 ## Tests
-You can run the tests using grunt test. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/.
-The test coverage for smartcrop.js is very limited at the moment. I expect to improve this as the code matures and the concepts solidify.
+You can run the tests using `grunt test`. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/.
 
 ## Benchmark
 There are benchmarks for both the browser (test/benchmark.html) and node (node test/benchmark-node.js [requires node-canvas])
@@ -175,4 +201,4 @@ This is a 1.0 in the semantic meaning (denoting backwards incompatible API chang
 It does not denote a finished product.
 
 ## License
-Copyright (c) 2016 Jonas Wagner, licensed under the MIT License (enclosed)
+Copyright (c) 2018 Jonas Wagner, licensed under the MIT License (enclosed)
