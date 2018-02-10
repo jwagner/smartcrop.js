@@ -202,7 +202,7 @@ In other words, it's fine to run it on one image, it's suboptimal to run it on a
 
 ## Version history
 
-### 2.0.0 (beta)
+### 2.0.2
 
 In short: It's a lot faster when calculating bigger crops.
 The quality of the crops should be comparable but the results
