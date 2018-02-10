@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 function debugDraw(result, showCrop) {
   var topCrop = result.debugTopCrop;
   var options = result.debugOptions;

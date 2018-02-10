@@ -1,40 +1,49 @@
-html { width: 100%; min-height: 100%; }
+html {
+  width: 100%;
+  min-height: 100%;
+}
 body {
-    font-family: sans-serif;
-    max-width: 1400px;
-    padding: 8px;
-    margin: auto;
+  font-family: sans-serif;
+  max-width: 1400px;
+  padding: 8px;
+  margin: auto;
 }
 .dark body {
-    max-width: 1240px;
+  max-width: 1240px;
 }
 .dark {
-    background: #111;
-    color: #888;
+  background: #111;
+  color: #888;
 }
 .dark a {
-    color: #8af;
+  color: #8af;
 }
 
 h1 {
-    font-weight: normal;
+  font-weight: normal;
 }
 
 p {
-    max-width: 900px;
+  max-width: 900px;
 }
-input[type=file] {
-    display: block;
+input[type='file'] {
+  display: block;
 }
-input[type=range] {
-    width: 300px;
+input[type='range'] {
+  width: 300px;
 }
 
-img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: auto; }
+img,
+canvas {
+  padding: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: auto;
+}
 
 .output {
-    width: 50%;
-    float: left;
+  width: 50%;
+  float: left;
 }
 
 .testsuite img {
@@ -49,43 +58,44 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
 }
 
 .sidebar {
-    width: 50%;
-    float: left;
-    height: 600px;
+  width: 50%;
+  float: left;
+  height: 600px;
 }
 
-#slide, #prev-slide {
-    max-width: 100%;
-    width: 1280px;
-    height: 720px;
-    overflow: hidden;
+#slide,
+#prev-slide {
+  max-width: 100%;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
 }
 #slide {
-    background: #ccc;
+  background: #ccc;
 }
 #prev-slide {
-    position: absolute;
-    z-index: 1;
+  position: absolute;
+  z-index: 1;
 }
 
 #prev-slide img {
-    transition: all 1s linear;
-    -webkit-transition: all 1s linear;
-    opacity: 0.9;
-    max-width: none;
-    padding: 0;
-    margin: 0;
+  transition: all 1s linear;
+  -webkit-transition: all 1s linear;
+  opacity: 0.9;
+  max-width: none;
+  padding: 0;
+  margin: 0;
 }
 
 #slide img {
-    transition: all 5s linear;
-    -webkit-transition: all 5s linear;
-    /*transition-delay: 1s;*/
-    /*-webkit-transition-delay: 1s; [> Safari <]*/
-    opacity: 1;
-    max-width: none;
-    padding: 0;
-    margin: 0;
+  transition: all 5s linear;
+  -webkit-transition: all 5s linear;
+  /*transition-delay: 1s;*/
+  /*-webkit-transition-delay: 1s; [> Safari <]*/
+  opacity: 1;
+  max-width: none;
+  padding: 0;
+  margin: 0;
 }
 
 .opencv-loading {
@@ -94,7 +104,9 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
 }
 
 @keyframes spinner {
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .opencv-loading:after {
@@ -107,7 +119,7 @@ img, canvas { padding: 8px; box-sizing: border-box; max-width: 100%; margin: aut
   border-radius: 50%;
   border: 2px solid #ccc;
   border-top-color: #333;
-  animation: spinner .6s linear infinite;
+  animation: spinner 0.6s linear infinite;
 }
 
 .drop {

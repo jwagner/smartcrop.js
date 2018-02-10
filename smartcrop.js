@@ -29,9 +29,12 @@
 
   var smartcrop = {};
   // Promise implementation to use
-  smartcrop.Promise = typeof Promise !== 'undefined' ? Promise : function() {
-    throw new Error('No native promises and smartcrop.Promise not set.');
-  };
+  smartcrop.Promise =
+    typeof Promise !== 'undefined'
+      ? Promise
+      : function() {
+        throw new Error('No native promises and smartcrop.Promise not set.');
+      };
 
   smartcrop.DEFAULTS = {
     width: 0,
@@ -66,10 +69,8 @@
     imageOperations: null,
     canvasFactory: defaultCanvasFactory,
     // Factory: defaultFactories,
-    debug: false,
+    debug: false
   };
-
-
 
   smartcrop.crop = function(inputImage, options_, callback) {
     var options = extend({}, smartcrop.DEFAULTS, options_);
@@ -89,44 +90,54 @@
     var prescale = 1;
 
     // open the image
-    return iop.open(inputImage, options.input).then(function(image) {
+    return iop
+      .open(inputImage, options.input)
+      .then(function(image) {
+        // calculate desired crop dimensions based on the image size
+        if (options.width && options.height) {
+          scale = min(
+            image.width / options.width,
+            image.height / options.height
+          );
+          options.cropWidth = ~~(options.width * scale);
+          options.cropHeight = ~~(options.height * scale);
+          // Img = 100x100, width = 95x95, scale = 100/95, 1/scale > min
+          // don't set minscale smaller than 1/scale
+          // -> don't pick crops that need upscaling
+          options.minScale = min(
+            options.maxScale,
+            max(1 / scale, options.minScale)
+          );
 
-      // calculate desired crop dimensions based on the image size
-      if (options.width && options.height) {
-        scale = min(image.width / options.width, image.height / options.height);
-        options.cropWidth = ~~(options.width * scale);
-        options.cropHeight = ~~(options.height * scale);
-        // Img = 100x100, width = 95x95, scale = 100/95, 1/scale > min
-        // don't set minscale smaller than 1/scale
-        // -> don't pick crops that need upscaling
-        options.minScale = min(options.maxScale, max(1 / scale, options.minScale));
-
-        // prescale if possible
-        if (options.prescale !== false) {
-          prescale = min(max(256 / image.width, 256 / image.height), 1);
-          if (prescale < 1) {
-            image = iop.resample(image, image.width * prescale, image.height * prescale);
-            options.cropWidth = ~~(options.cropWidth * prescale);
-            options.cropHeight = ~~(options.cropHeight * prescale);
-            if (options.boost) {
-              options.boost = options.boost.map(function(boost) {
-                return {
-                  x: ~~(boost.x * prescale),
-                  y: ~~(boost.y * prescale),
-                  width: ~~(boost.width * prescale),
-                  height: ~~(boost.height * prescale),
-                  weight: boost.weight
-                };
-              });
+          // prescale if possible
+          if (options.prescale !== false) {
+            prescale = min(max(256 / image.width, 256 / image.height), 1);
+            if (prescale < 1) {
+              image = iop.resample(
+                image,
+                image.width * prescale,
+                image.height * prescale
+              );
+              options.cropWidth = ~~(options.cropWidth * prescale);
+              options.cropHeight = ~~(options.cropHeight * prescale);
+              if (options.boost) {
+                options.boost = options.boost.map(function(boost) {
+                  return {
+                    x: ~~(boost.x * prescale),
+                    y: ~~(boost.y * prescale),
+                    width: ~~(boost.width * prescale),
+                    height: ~~(boost.height * prescale),
+                    weight: boost.weight
+                  };
+                });
+              }
+            } else {
+              prescale = 1;
             }
           }
-          else {
-            prescale = 1;
-          }
         }
-      }
-      return image;
-    })
+        return image;
+      })
       .then(function(image) {
         return iop.getData(image).then(function(data) {
           var result = analyse(options, data);
@@ -144,7 +155,6 @@
         });
       });
   };
-
 
   // Check if all the dependencies are there
   // todo:
@@ -176,13 +186,13 @@
 
         if (x === 0 || x >= w - 1 || y === 0 || y >= h - 1) {
           lightness = sample(id, p);
-        }
-        else {
-          lightness = sample(id, p) * 4 -
-              sample(id, p - w * 4) -
-              sample(id, p - 4) -
-              sample(id, p + 4) -
-              sample(id, p + w * 4);
+        } else {
+          lightness =
+            sample(id, p) * 4 -
+            sample(id, p - w * 4) -
+            sample(id, p - 4) -
+            sample(id, p + 4) -
+            sample(id, p + w * 4);
         }
 
         od[p + 1] = lightness;
@@ -202,11 +212,14 @@
         var lightness = cie(id[p], id[p + 1], id[p + 2]) / 255;
         var skin = skinColor(options, id[p], id[p + 1], id[p + 2]);
         var isSkinColor = skin > options.skinThreshold;
-        var isSkinBrightness = lightness >= options.skinBrightnessMin && lightness <= options.skinBrightnessMax;
+        var isSkinBrightness =
+          lightness >= options.skinBrightnessMin &&
+          lightness <= options.skinBrightnessMax;
         if (isSkinColor && isSkinBrightness) {
-          od[p] = (skin - options.skinThreshold) * (255 / (1 - options.skinThreshold));
-        }
-        else {
+          od[p] =
+            (skin - options.skinThreshold) *
+            (255 / (1 - options.skinThreshold));
+        } else {
           od[p] = 0;
         }
       }
@@ -226,12 +239,14 @@
         var sat = saturation(id[p], id[p + 1], id[p + 2]);
 
         var acceptableSaturation = sat > options.saturationThreshold;
-        var acceptableLightness = lightness >= options.saturationBrightnessMin &&
-            lightness <= options.saturationBrightnessMax;
+        var acceptableLightness =
+          lightness >= options.saturationBrightnessMin &&
+          lightness <= options.saturationBrightnessMax;
         if (acceptableLightness && acceptableSaturation) {
-          od[p + 2] = (sat - options.saturationThreshold) * (255 / (1 - options.saturationThreshold));
-        }
-        else {
+          od[p + 2] =
+            (sat - options.saturationThreshold) *
+            (255 / (1 - options.saturationThreshold));
+        } else {
           od[p + 2] = 0;
         }
       }
@@ -270,14 +285,18 @@
     var minDimension = min(width, height);
     var cropWidth = options.cropWidth || minDimension;
     var cropHeight = options.cropHeight || minDimension;
-    for (var scale = options.maxScale; scale >= options.minScale; scale -= options.scaleStep) {
+    for (
+      var scale = options.maxScale;
+      scale >= options.minScale;
+      scale -= options.scaleStep
+    ) {
       for (var y = 0; y + cropHeight * scale <= height; y += options.step) {
         for (var x = 0; x + cropWidth * scale <= width; x += options.step) {
           results.push({
             x: x,
             y: y,
             width: cropWidth * scale,
-            height: cropHeight * scale,
+            height: cropHeight * scale
           });
         }
       }
@@ -291,7 +310,7 @@
       saturation: 0,
       skin: 0,
       boost: 0,
-      total: 0,
+      total: 0
     };
 
     var od = output.data;
@@ -303,26 +322,35 @@
 
     for (var y = 0; y < outputHeightDownSample; y += downSample) {
       for (var x = 0; x < outputWidthDownSample; x += downSample) {
-        var p = (~~(y * invDownSample) * outputWidth + ~~(x * invDownSample)) * 4;
+        var p =
+          (~~(y * invDownSample) * outputWidth + ~~(x * invDownSample)) * 4;
         var i = importance(options, crop, x, y);
         var detail = od[p + 1] / 255;
 
         result.skin += od[p] / 255 * (detail + options.skinBias) * i;
         result.detail += detail * i;
-        result.saturation += od[p + 2] / 255 * (detail + options.saturationBias) * i;
+        result.saturation +=
+          od[p + 2] / 255 * (detail + options.saturationBias) * i;
         result.boost += od[p + 3] / 255 * i;
       }
     }
 
-    result.total = (result.detail * options.detailWeight +
-                    result.skin * options.skinWeight +
-                    result.saturation * options.saturationWeight +
-                    result.boost * options.boostWeight) / (crop.width * crop.height);
+    result.total =
+      (result.detail * options.detailWeight +
+        result.skin * options.skinWeight +
+        result.saturation * options.saturationWeight +
+        result.boost * options.boostWeight) /
+      (crop.width * crop.height);
     return result;
   }
 
   function importance(options, crop, x, y) {
-    if (crop.x > x || x >= crop.x + crop.width || crop.y > y || y >= crop.y + crop.height) {
+    if (
+      crop.x > x ||
+      x >= crop.x + crop.width ||
+      crop.y > y ||
+      y >= crop.y + crop.height
+    ) {
       return options.outsideImportance;
     }
     x = (x - crop.x) / crop.width;
@@ -335,7 +363,7 @@
     var d = (dx * dx + dy * dy) * options.edgeWeight;
     var s = 1.41 - sqrt(px * px + py * py);
     if (options.ruleOfThirds) {
-      s += (Math.max(0, s + d + 0.5) * 1.2) * (thirds(px) + thirds(py));
+      s += Math.max(0, s + d + 0.5) * 1.2 * (thirds(px) + thirds(py));
     }
     return s + d;
   }
@@ -343,9 +371,9 @@
 
   function skinColor(options, r, g, b) {
     var mag = sqrt(r * r + g * g + b * b);
-    var rd = (r / mag - options.skinColor[0]);
-    var gd = (g / mag - options.skinColor[1]);
-    var bd = (b / mag - options.skinColor[2]);
+    var rd = r / mag - options.skinColor[0];
+    var gd = g / mag - options.skinColor[1];
+    var bd = b / mag - options.skinColor[2];
     var d = sqrt(rd * rd + gd * gd + bd * bd);
     return 1 - d;
   }
@@ -372,7 +400,6 @@
         topCrop = crop;
         topScore = crop.score.total;
       }
-
     }
 
     result.topCrop = topCrop;
@@ -392,8 +419,7 @@
     this.height = height;
     if (data) {
       this.data = new Uint8ClampedArray(data);
-    }
-    else {
+    } else {
       this.data = new Uint8ClampedArray(width * height * 4);
     }
   }
@@ -462,11 +488,14 @@
         var h = image.naturalHeight || image.height;
         var c = canvasFactory(w, h);
         var ctx = c.getContext('2d');
-        if (image.naturalWidth && (image.naturalWidth != image.width || image.naturalHeight != image.height)) {
+        if (
+          image.naturalWidth &&
+          (image.naturalWidth != image.width ||
+            image.naturalHeight != image.height)
+        ) {
           c.width = image.naturalWidth;
           c.height = image.naturalHeight;
-        }
-        else {
+        } else {
           c.width = image.width;
           c.height = image.height;
         }
@@ -479,7 +508,17 @@
           var c = canvasFactory(~~width, ~~height);
           var ctx = c.getContext('2d');
 
-          ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
+          ctx.drawImage(
+            image,
+            0,
+            0,
+            image.width,
+            image.height,
+            0,
+            0,
+            c.width,
+            c.height
+          );
           return smartcrop.Promise.resolve(c);
         });
       },
@@ -489,7 +528,7 @@
           var id = ctx.getImageData(0, 0, c.width, c.height);
           return new ImgData(c.width, c.height, id.data);
         });
-      },
+      }
     };
   }
   smartcrop._canvasImageOperations = canvasImageOperations;
@@ -515,7 +554,7 @@
   // Gets value in the range of [0, 1] where 0 is the center of the pictures
   // returns weight of rule of thirds [0, 1]
   function thirds(x) {
-    x = ((x - (1 / 3) + 1.0) % 2.0 * 0.5 - 0.5) * 16;
+    x = (((x - 1 / 3 + 1.0) % 2.0) * 0.5 - 0.5) * 16;
     return Math.max(1.0 - x * x, 0.0);
   }
 
@@ -540,11 +579,15 @@
   }
 
   // Amd
-  if (typeof define !== 'undefined' && define.amd) define(function() {return smartcrop;});
+  if (typeof define !== 'undefined' && define.amd)
+    define(function() {
+      return smartcrop;
+    });
   // Common js
   if (typeof exports !== 'undefined') exports.smartcrop = smartcrop;
-  // Browser
-  else if (typeof navigator !== 'undefined') window.SmartCrop = window.smartcrop = smartcrop;
+  else if (typeof navigator !== 'undefined')
+    // Browser
+    window.SmartCrop = window.smartcrop = smartcrop;
   // Nodejs
   if (typeof module !== 'undefined') {
     module.exports = smartcrop;
