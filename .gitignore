@@ -1,2 +1,4 @@
 node_modules
 .500px-consumer-key
+dist
+release

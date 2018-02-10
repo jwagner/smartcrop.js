@@ -1,6 +1,7 @@
+/* global jQuery, Q */
 jQuery(function($) {
-
-  var transitionend = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
+  var transitionend =
+    'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
 
   var slide = $('#slide');
   var prevSlide = $('#prev-slide');
@@ -9,7 +10,7 @@ jQuery(function($) {
   var height = slide.height();
 
   for (var i = 0; i < 8; i++) {
-    images.push({url: 'images/slideshow/' + i + '.jpg'});
+    images.push({ url: 'images/slideshow/' + i + '.jpg' });
   }
 
   function loadImage(src) {
@@ -33,7 +34,6 @@ jQuery(function($) {
   }
 
   function slideShow(images) {
-    var analysed = 0;
     var i = 0;
 
     function next() {
@@ -42,24 +42,35 @@ jQuery(function($) {
     }
 
     images = _.chain(images)
-        .shuffle()
-        .head(10)
-        .value();
+      .shuffle()
+      .head(10)
+      .value();
 
-    Q.all(images.map(function(i) {
-      return loadImage(i.url).then(function(img) {
-        i.img = img;
-        var options = {width: width * 0.1, height: height * 0.1, ruleOfThirds: false};
-        return Q.all([
-                smartcrop(img, _.extend({maxScale: 0.8, minScale: 0.7}, options)).then(function(result) {
-                  i.from = result;
-                }),
-                smartcrop(img, _.extend({minScale: 1}, options)).then(function(result) {
-                  i.to = result;
-                }),
-            ]);
-      });
-    })).then(next);
+    Q.all(
+      images.map(function(i) {
+        return loadImage(i.url).then(function(img) {
+          i.img = img;
+          var options = {
+            width: width * 0.1,
+            height: height * 0.1,
+            ruleOfThirds: false
+          };
+          return Q.all([
+            smartcrop(
+              img,
+              _.extend({ maxScale: 0.8, minScale: 0.7 }, options)
+            ).then(function(result) {
+              i.from = result;
+            }),
+            smartcrop(img, _.extend({ minScale: 1 }, options)).then(function(
+              result
+            ) {
+              i.to = result;
+            })
+          ]);
+        });
+      })
+    ).then(next);
   }
 
   function showSlide(image, done) {
@@ -73,16 +84,19 @@ jQuery(function($) {
         '-webkit-transform': t,
         transform: t,
         '-webkit-transform-origin': '0 0',
-        'transform-origin': '0 0',
+        'transform-origin': '0 0'
       };
     }
 
     // zooming out usually works better, but some change is good too
-    if ((image.from.topCrop.score.total + 0.1) * 1.002 > (image.to.topCrop.score.total + 0.1)) {
+    var from, to;
+    if (
+      (image.from.topCrop.score.total + 0.1) * 1.002 >
+      image.to.topCrop.score.total + 0.1
+    ) {
       from = image.from;
       to = image.to;
-    }
-    else {
+    } else {
       from = image.to;
       to = image.from;
     }
@@ -90,27 +104,22 @@ jQuery(function($) {
     window.to = to;
     var last = $('img', slide);
     if (last[0]) {
-      prevSlide.empty().append(
-          last.remove()
-      );
+      prevSlide.empty().append(last.remove());
       last.width();
       last.css('opacity', '0');
     }
-    slide
-        .empty()
-        .append(img);
+    slide.empty().append(img);
     $(img)
-        .css(transform(from.topCrop))
-        .css('opacity', 1)
-        .width(); // reflow
+      .css(transform(from.topCrop))
+      .css('opacity', 1)
+      .width(); // reflow
     $(img)
-        .on(transitionend, _.once(done))
-        .css(transform(to.topCrop));
+      .on(transitionend, _.once(done))
+      .css(transform(to.topCrop));
 
     img.onerror = done;
     img.src = image.url;
   }
 
   slideShow(images);
-
 });

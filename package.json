@@ -5,26 +5,24 @@
   "homepage": "https://github.com/jwagner/smartcrop.js",
   "author": "Jonas Wagner <jonas@29a.ch> (http://29a.ch/)",
   "main": "./smartcrop",
-  "files": [
-    "smartcrop.js"
-  ],
+  "files": ["smartcrop.js"],
   "devDependencies": {
     "500px": "~0.3.2",
     "benchmark": "^2.1.4",
-    "canvas": "^1.6.9",
-    "chai": "^3.5.0",
-    "grunt": "^0.4.4",
+    "chai": "^4.1.2",
+    "eslint": "^4.17.0",
+    "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-connect": "~0.7.1",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-rsync": "~0.5.0",
-    "karma": "^1.7.1",
-    "karma-chrome-launcher": "^1.0.1",
+    "grunt-contrib-connect": "~1.0.2",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-rsync": "~2.0.1",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
     "karma-sauce-launcher": "^1.2.0",
-    "microtime": "^2.1.6",
-    "mocha": "^3.5.3",
-    "promise-polyfill": "^6.1.0"
+    "microtime": "^2.1.7",
+    "mocha": "^5.0.0",
+    "promise-polyfill": "^7.0.0"
   },
   "license": "MIT",
   "repository": {
@@ -33,6 +31,11 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "./node_modules/.bin/karma start karma.conf.js"
+    "test": "npm run lint && karma start karma.conf.js",
+    "lint":
+      "eslint smartcrop.js test examples/slideshow.js examples/testbed.js examples/testsuite.js s examples/smartcrop-debug.js"
+  },
+  "dependencies": {
+    "prettier-eslint": "^8.8.1"
   }
 }
