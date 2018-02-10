@@ -12,6 +12,7 @@
     "500px": "~0.3.2",
     "benchmark": "^2.1.4",
     "chai": "^4.1.2",
+    "eslint": "^4.17.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-connect": "~1.0.2",
@@ -32,6 +33,6 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "./node_modules/.bin/karma start karma.conf.js"
+    "test": "eslint smartcrop.js && karma start karma.conf.js"
   }
 }
