@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "npm run lint && && karma start karma.conf.js",
+    "test": "npm run lint && karma start karma.conf.js",
     "lint":
       "eslint smartcrop.js test examples/slideshow.js examples/testbed.js examples/testsuite.js s examples/smartcrop-debug.js"
   },
