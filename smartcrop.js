@@ -559,7 +559,7 @@
   }
 
   function cie(r, g, b) {
-    return 0.5126 * b + 0.7152 * g + 0.0722 * r;
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   }
   function sample(id, p) {
     return cie(id[p], id[p + 1], id[p + 2]);
