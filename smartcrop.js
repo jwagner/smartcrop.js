@@ -566,16 +566,16 @@
   }
   function saturation(r, g, b) {
     var maximum = max(r / 255, g / 255, b / 255);
-    var minumum = min(r / 255, g / 255, b / 255);
+    var minimum = min(r / 255, g / 255, b / 255);
 
-    if (maximum === minumum) {
+    if (maximum === minimum) {
       return 0;
     }
 
-    var l = (maximum + minumum) / 2;
-    var d = maximum - minumum;
+    var l = (maximum + minimum) / 2;
+    var d = maximum - minimum;
 
-    return l > 0.5 ? d / (2 - maximum - minumum) : d / (maximum + minumum);
+    return l > 0.5 ? d / (2 - maximum - minimum) : d / (maximum + minimum);
   }
 
   // Amd
