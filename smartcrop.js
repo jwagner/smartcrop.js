@@ -25,16 +25,16 @@
  */
 
 (function() {
-  'use strict';
+  "use strict";
 
   var smartcrop = {};
   // Promise implementation to use
   smartcrop.Promise =
-    typeof Promise !== 'undefined'
+    typeof Promise !== "undefined"
       ? Promise
       : function() {
-        throw new Error('No native promises and smartcrop.Promise not set.');
-      };
+          throw new Error("No native promises and smartcrop.Promise not set.");
+        };
 
   smartcrop.DEFAULTS = {
     width: 0,
@@ -164,8 +164,8 @@
     var canvasFactory = options ? options.canvasFactory : defaultCanvasFactory;
 
     if (canvasFactory === defaultCanvasFactory) {
-      var c = document.createElement('canvas');
-      if (!c.getContext('2d')) {
+      var c = document.createElement("canvas");
+      if (!c.getContext("2d")) {
         return false;
       }
     }
@@ -327,11 +327,11 @@
         var i = importance(options, crop, x, y);
         var detail = od[p + 1] / 255;
 
-        result.skin += od[p] / 255 * (detail + options.skinBias) * i;
+        result.skin += (od[p] / 255) * (detail + options.skinBias) * i;
         result.detail += detail * i;
         result.saturation +=
-          od[p + 2] / 255 * (detail + options.saturationBias) * i;
-        result.boost += od[p + 3] / 255 * i;
+          (od[p + 2] / 255) * (detail + options.saturationBias) * i;
+        result.boost += (od[p + 3] / 255) * i;
       }
     }
 
@@ -471,7 +471,7 @@
   smartcrop._downSample = downSample;
 
   function defaultCanvasFactory(w, h) {
-    var c = document.createElement('canvas');
+    var c = document.createElement("canvas");
     c.width = w;
     c.height = h;
     return c;
@@ -487,7 +487,7 @@
         var w = image.naturalWidth || image.width;
         var h = image.naturalHeight || image.height;
         var c = canvasFactory(w, h);
-        var ctx = c.getContext('2d');
+        var ctx = c.getContext("2d");
         if (
           image.naturalWidth &&
           (image.naturalWidth != image.width ||
@@ -506,7 +506,7 @@
       resample: function(image, width, height) {
         return Promise.resolve(image).then(function(image) {
           var c = canvasFactory(~~width, ~~height);
-          var ctx = c.getContext('2d');
+          var ctx = c.getContext("2d");
 
           ctx.drawImage(
             image,
@@ -524,7 +524,7 @@
       },
       getData: function(image) {
         return Promise.resolve(image).then(function(c) {
-          var ctx = c.getContext('2d');
+          var ctx = c.getContext("2d");
           var id = ctx.getImageData(0, 0, c.width, c.height);
           return new ImgData(c.width, c.height, id.data);
         });
@@ -579,17 +579,17 @@
   }
 
   // Amd
-  if (typeof define !== 'undefined' && define.amd)
+  if (typeof define !== "undefined" && define.amd)
     define(function() {
       return smartcrop;
     });
   // Common js
-  if (typeof exports !== 'undefined') exports.smartcrop = smartcrop;
-  else if (typeof navigator !== 'undefined')
+  if (typeof exports !== "undefined") exports.smartcrop = smartcrop;
+  else if (typeof navigator !== "undefined")
     // Browser
     window.SmartCrop = window.smartcrop = smartcrop;
   // Nodejs
-  if (typeof module !== 'undefined') {
+  if (typeof module !== "undefined") {
     module.exports = smartcrop;
   }
 })();
