@@ -108,7 +108,7 @@
   }
 
   var getFaceAPIDetector = _.memoize(function() {
-    return faceapi.nets.tinyFaceDetector.loadFromUri('face-api.js');
+    return faceapi.nets.tinyFaceDetector.loadFromUri('face-api');
   });
 
   function faceDetectionFaceAPI(options, callback) {
