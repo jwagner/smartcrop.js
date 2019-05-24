@@ -107,15 +107,9 @@
     result.src = canvas.toDataURL();
   }
 
-  var faceAPIDetector;
-  function getFaceAPIDetector() {
-    if (!faceAPIDetector) {
-      faceAPIDetector = faceapi.nets.tinyFaceDetector.loadFromUri(
-        'face-api.js'
-      );
-    }
-    return faceAPIDetector;
-  }
+  var getFaceAPIDetector = _.memoize(function() {
+    return faceapi.nets.tinyFaceDetector.loadFromUri('face-api.js');
+  });
 
   function faceDetectionFaceAPI(options, callback) {
     getFaceAPIDetector()
@@ -161,9 +155,6 @@
       console.log(faceCascade);
       // detect faces
       var msize = new cv.Size(0, 0);
-      // let c = document.createElement('canvas');
-      // cv.imshow(c, gray);
-      // document.body.appendChild(c)
       faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
       options.boost = [];
       for (var i = 0; i < faces.size(); ++i) {
