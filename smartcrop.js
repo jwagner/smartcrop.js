@@ -29,12 +29,11 @@
 
   var smartcrop = {};
   // Promise implementation to use
-  smartcrop.Promise =
-    typeof Promise !== 'undefined'
-      ? Promise
-      : function() {
-        throw new Error('No native promises and smartcrop.Promise not set.');
-      };
+  function NoPromises() {
+    throw new Error('No native promises and smartcrop.Promise not set.');
+  }
+
+  smartcrop.Promise = typeof Promise !== 'undefined' ? Promise : NoPromises;
 
   smartcrop.DEFAULTS = {
     width: 0,
@@ -327,11 +326,11 @@
         var i = importance(options, crop, x, y);
         var detail = od[p + 1] / 255;
 
-        result.skin += od[p] / 255 * (detail + options.skinBias) * i;
+        result.skin += (od[p] / 255) * (detail + options.skinBias) * i;
         result.detail += detail * i;
         result.saturation +=
-          od[p + 2] / 255 * (detail + options.saturationBias) * i;
-        result.boost += od[p + 3] / 255 * i;
+          (od[p + 2] / 255) * (detail + options.saturationBias) * i;
+        result.boost += (od[p + 3] / 255) * i;
       }
     }
 

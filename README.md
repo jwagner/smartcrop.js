@@ -10,9 +10,9 @@ Image: [https://www.flickr.com/photos/endogamia/5682480447/](https://www.flickr.
 
 ## Demos
 
-* [Smartcrop.js Test Suite](https://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
-* [Smartcrop.js Test Bed](https://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images and different face detection libraries.
-* [Automatic Photo transitions](https://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creates Ken Burns transitions for a slide show.
+- [Smartcrop.js Test Suite](https://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
+- [Smartcrop.js Test Bed](https://29a.ch/sandbox/2014/smartcrop/examples/testbed.html), allows you to test smartcrop with your own images and different face detection libraries.
+- [Automatic Photo transitions](https://29a.ch/sandbox/2014/smartcrop/examples/slideshow.html), automatically creates Ken Burns transitions for a slide show.
 
 ## Simple Example
 
@@ -54,7 +54,7 @@ The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) can be used as an 
 
 While _smartcrop.js_ is a small personal project it is currently being used on high traffic production sites.
 It has a basic set of automated tests and a test coverage of close to 100%.
-The tests are ran in all modern browsers thanks to [saucelabs](https://saucelabs.com/).
+The tests run in all modern browsers thanks to [saucelabs](https://saucelabs.com/).
 If in any doubt the code is short enough to perform a quick review yourself.
 
 ## Algorithm Overview
@@ -78,10 +78,10 @@ In many cases it does make sense to add face detection to it to ensure faces get
 
 There are multiple javascript libraries which can be easily integrated into smartcrop.js.
 
-* [ccv js](https://github.com/liuliu/ccv) / [jquery.facedetection](http://facedetection.jaysalvat.com/)
-* [tracking.js](https://trackingjs.com/examples/face_hello_world.html)
-* [opencv.js](https://docs.opencv.org/3.3.1/d5/d10/tutorial_js_root.html)
-* [node-opencv](https://github.com/peterbraden/node-opencv)
+- [ccv js](https://github.com/liuliu/ccv) / [jquery.facedetection](http://facedetection.jaysalvat.com/)
+- [tracking.js](https://trackingjs.com/examples/face_hello_world.html)
+- [opencv.js](https://docs.opencv.org/3.3.1/d5/d10/tutorial_js_root.html)
+- [node-opencv](https://github.com/peterbraden/node-opencv)
 
 You can experiment with all of these in the [smartcrop.js testbed](https://29a.ch/sandbox/2014/smartcrop/examples/testbed.html)
 
@@ -95,9 +95,9 @@ It would be interesting to see how more [state of the art](http://mmlab.ie.cuhk.
 
 ## Supported Module Formats
 
-* CommonJS
-* AMD
-* global export / window
+- CommonJS
+- AMD
+- global export / window
 
 ## Supported Browsers
 
@@ -177,7 +177,7 @@ into account faces in the image. See [smartcrop-cli](https://github.com/jwagner/
 
 ## Tests
 
-You can run the tests using `grunt test`. Alternatively you can also just run grunt (the default task) and open http://localhost:8000/test/.
+You can run the tests using `grunt test`. Alternatively you can also just run grunt (the default task) and open <http://localhost:8000/test/.>
 
 ## Benchmark
 
@@ -189,17 +189,17 @@ In other words, it's fine to run it on one image, it's suboptimal to run it on a
 
 ## Contributors
 
-* [Christian Muehlhaeuser](https://github.com/muesli)
+- [Christian Muehlhaeuser](https://github.com/muesli)
 
 ## Ports, Alternatives
 
-* [connect-thumbs](https://github.com/inadarei/connect-thumbs) Middleware for connect.js that supports smartcrop.js by [Irakli Nadareishvili](https://github.com/inadarei/connect-thumbs)
-* [smartcrop-java](https://github.com/QuadFlask/smartcrop-java) by [QuadFlask](https://github.com/QuadFlask/)
-* [smartcrop-android](https://github.com/QuadFlask/smartcrop-android) by [QuadFlask](https://github.com/QuadFlask/)
-* [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muehlhaeuser](https://github.com/muesli)
-* [smartcrop.py](https://github.com/hhatto/smartcrop.py) by [Hideo Hattori](http://www.hexacosa.net/about/)
-* [smartcrop-rails](https://github.com/sadiqmmm/smartcrop-rails) smartcrop wrapped in a ruby gem by [Mohammed Sadiq](https://github.com/sadiqmmm/)
-* [smartcrop.net](https://github.com/softawaregmbh/smartcrop.net) c# .net port by [softaware gmbh](https://www.softaware.at/)
+- [connect-thumbs](https://github.com/inadarei/connect-thumbs) Middleware for connect.js that supports smartcrop.js by [Irakli Nadareishvili](https://github.com/inadarei/connect-thumbs)
+- [smartcrop-java](https://github.com/QuadFlask/smartcrop-java) by [QuadFlask](https://github.com/QuadFlask/)
+- [smartcrop-android](https://github.com/QuadFlask/smartcrop-android) by [QuadFlask](https://github.com/QuadFlask/)
+- [smartcrop.go](https://github.com/muesli/smartcrop) by [Christian Muehlhaeuser](https://github.com/muesli)
+- [smartcrop.py](https://github.com/hhatto/smartcrop.py) by [Hideo Hattori](http://www.hexacosa.net/about/)
+- [smartcrop-rails](https://github.com/sadiqmmm/smartcrop-rails) smartcrop wrapped in a ruby gem by [Mohammed Sadiq](https://github.com/sadiqmmm/)
+- [smartcrop.net](https://github.com/softawaregmbh/smartcrop.net) c# .net port by [softaware gmbh](https://www.softaware.at/)
 
 ## Version history
 

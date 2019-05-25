@@ -33,7 +33,8 @@ module.exports = {
         Uint8Array: false,
         _: false,
         cv: false,
-        tracking: false
+        tracking: false,
+        faceapi: false
       }
     }
   ]

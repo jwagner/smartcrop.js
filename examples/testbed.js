@@ -36,7 +36,7 @@
     }
   }
 
-  load('images/flickr/kitty.jpg');
+  load('images/unsplash/makhmutova-dina-1580313-unsplash.jpg');
 
   $('input[type=range]').on(
     'input',
@@ -74,21 +74,18 @@
     };
 
     var faceDetection = $('input[name=faceDetection]:checked', form).val();
+    var analyzeOptions = analyze.bind(this, options);
 
     if (faceDetection === 'tracking') {
-      faceDetectionTracking(options, function() {
-        analyze(options);
-      });
+      faceDetectionTracking(options, analyzeOptions);
     } else if (faceDetection === 'jquery') {
-      faceDetectionJquery(options, function() {
-        analyze(options);
-      });
+      faceDetectionJquery(options, analyzeOptions);
     } else if (faceDetection === 'opencv') {
-      faceDetectionOpenCV(options, function() {
-        analyze(options);
-      });
+      faceDetectionOpenCV(options, analyzeOptions);
+    } else if (faceDetection === 'face-api') {
+      faceDetectionFaceAPI(options, analyzeOptions);
     } else {
-      analyze(options);
+      analyzeOptions();
     }
   }
 
@@ -110,6 +107,42 @@
     result.src = canvas.toDataURL();
   }
 
+  var getFaceAPIDetector = _.memoize(function() {
+    return faceapi.nets.tinyFaceDetector.loadFromUri('face-api');
+  });
+
+  function faceDetectionFaceAPI(options, callback) {
+    getFaceAPIDetector()
+      .then(
+        function() {
+          return faceapi.tinyFaceDetector(img);
+        },
+        function(err) {
+          console.error(err);
+          alert('Could not load models');
+        }
+      )
+      .then(
+        function(faces) {
+          options.boost = faces.map(function(face) {
+            var box = face.box;
+            return {
+              x: box.x,
+              y: box.y,
+              width: box.width,
+              height: box.height,
+              weight: 1.0
+            };
+          });
+          callback(options);
+        },
+        function(err) {
+          console.error(err);
+          alert('could not detectAllFaces');
+        }
+      );
+  }
+
   function faceDetectionOpenCV(options, callback) {
     prescaleImage(img, 768, function(img, scale) {
       var src = cv.imread(img);
@@ -122,9 +155,6 @@
       console.log(faceCascade);
       // detect faces
       var msize = new cv.Size(0, 0);
-      // let c = document.createElement('canvas');
-      // cv.imshow(c, gray);
-      // document.body.appendChild(c)
       faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
       options.boost = [];
       for (var i = 0; i < faces.size(); ++i) {
@@ -141,7 +171,7 @@
       gray.delete();
       faceCascade.delete();
       faces.delete();
-      callback();
+      callback(options);
     });
   }
 
@@ -164,7 +194,7 @@
           };
         });
 
-        callback();
+        callback(options);
       });
     });
   }
@@ -191,13 +221,13 @@
             };
           });
 
-        callback();
+        callback(options);
       }
     });
   }
 
   function analyze(options) {
-    console.log(options);
+    console.log('analyze', options);
     smartcrop.crop(img, options, draw);
   }
 
