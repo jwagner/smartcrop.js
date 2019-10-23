@@ -169,11 +169,13 @@ into account faces in the image. See [smartcrop-cli](https://github.com/jwagner/
 {
   x: 11, // pixels from the left side
   y: 20, // pixels from the top
-  width: 1, // pixels
-  height: 1, // pixels
-  weight: 1 // [0, 1]
+  width: 32, // pixels
+  height: 32, // pixels
+  weight: 1 // in the range [0, 1]
 }
 ```
+
+Note that the impact the boost has is proportional to it's weight and area.
 
 ## Tests
 
