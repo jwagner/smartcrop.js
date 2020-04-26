@@ -23,6 +23,6 @@ export interface CropOptions {
   debug?: boolean;
 }
 export const smartcrop: {
-  crop(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, options: CropOptions): Promise<CropResult>;
+  crop(image: CanvasImageSource, options: CropOptions): Promise<CropResult>;
 };
 export default smartcrop;
