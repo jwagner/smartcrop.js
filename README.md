@@ -27,7 +27,7 @@ smartcrop.crop(image, { width: 100, height: 100 }).then(function(result) {
 Output:
 
 ```javascript
-// smartcrop will output you it's best guess for a crop
+// smartcrop will output you its best guess for a crop
 // you can now use this data to crop the image.
 {topCrop: {x: 300, y: 200, height: 200, width: 200}}
 ```
