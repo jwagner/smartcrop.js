@@ -22,7 +22,7 @@ export interface CropOptions {
   ruleOfThirds?: boolean;
   debug?: boolean;
 }
-export const smartcrop: {
+const smartcrop: {
   crop(image: CanvasImageSource, options: CropOptions): Promise<CropResult>;
 };
 export default smartcrop;
