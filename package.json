@@ -9,23 +9,22 @@
     "smartcrop.js"
   ],
   "devDependencies": {
-    "500px": "~0.5.1",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "face-api.js": "^0.20.0",
+    "eslint": "^7.30.0",
+    "face-api.js": "^0.22.2",
     "grunt": "^1.0.4",
     "grunt-cli": "^1.3.2",
-    "grunt-contrib-connect": "~2.0.0",
+    "grunt-contrib-connect": "~3.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-rsync": "~3.0.0",
-    "karma": "^4.1.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-mocha": "^1.3.0",
-    "karma-sauce-launcher": "^2.0.2",
+    "karma": "^6.3.4",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-sauce-launcher": "^4.3.6",
     "microtime": "^3.0.0",
-    "mocha": "^6.1.4",
-    "prettier-eslint": "^8.8.2",
+    "mocha": "^9.0.2",
+    "prettier-eslint": "^12.0.0",
     "promise-polyfill": "^8.1.0"
   },
   "license": "MIT",
@@ -37,6 +36,5 @@
     "start": "grunt",
     "test": "karma start karma.conf.js",
     "lint": "eslint smartcrop.js test examples/slideshow.js examples/testbed.js examples/testsuite.js examples/smartcrop-debug.js"
-  },
-  "dependencies": {}
+  }
 }
