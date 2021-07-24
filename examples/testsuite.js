@@ -43,7 +43,7 @@ $.getJSON('images/images.json', function(images) {
   var totalCrops = 0;
 
   $('img').each(function() {
-    $(this).load(function() {
+    $(this).on('load', function() {
       window.setTimeout(
         function() {
           var img = this;
@@ -92,7 +92,7 @@ $.getJSON('images/images.json', function(images) {
       );
     });
     if (this.complete) {
-      $(this).load();
+      $(this).trigger('load');
     }
   });
 });
