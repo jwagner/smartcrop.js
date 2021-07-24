@@ -41,6 +41,14 @@ Smarcrop requires support for [Promises](http://caniuse.com/#feat=promises),
 use a [polyfill](https://github.com/taylorhakes/promise-polyfill) for unsupported browsers or set `smartcrop.Promise` to your favorite promise implementation
 (I recommend [bluebird](http://bluebirdjs.com/)).
 
+
+## Consider avoiding crops using dont-crop
+
+If you are interested in using smartcrop.js to crop your images you should also consider to avoid cropping them by using [dont-crop](https://github.com/jwagner/dont-crop/).
+Dont-crop gives you matching gradients and colors to pad and complement your images.
+
+![Example](https://29a.ch/images/dont-crop.cache-399897619c3de2e0.jpg)
+
 ## Command Line Interface
 
 The [smartcrop-cli](https://github.com/jwagner/smartcrop-cli) offers command line interface to smartcrop.js.
@@ -202,8 +210,12 @@ In other words, it's fine to run it on one image, it's suboptimal to run it on a
 - [smartcrop.py](https://github.com/hhatto/smartcrop.py) by [Hideo Hattori](http://www.hexacosa.net/about/)
 - [smartcrop-rails](https://github.com/sadiqmmm/smartcrop-rails) smartcrop wrapped in a ruby gem by [Mohammed Sadiq](https://github.com/sadiqmmm/)
 - [smartcrop.net](https://github.com/softawaregmbh/smartcrop.net) c# .net port by [softaware gmbh](https://www.softaware.at/)
+- [dont-crop](https://github.com/jwagner/dont-crop/) a library to avoid cropping by padding images with matching colors or gradients
 
 ## Version history
+
+### 2.0.4
+Typescript type definitions.
 
 ### 2.0.2
 
