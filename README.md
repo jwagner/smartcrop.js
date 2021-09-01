@@ -214,6 +214,9 @@ In other words, it's fine to run it on one image, it's suboptimal to run it on a
 
 ## Version history
 
+### 2.0.5
+Fix `TS1046: Top-level declarations in .d.ts files must start with either a 'declare' or 'export' modifier.`.
+
 ### 2.0.4
 Typescript type definitions.
 
