@@ -10,6 +10,7 @@
     "index.d.ts"
   ],
   "devDependencies": {
+    "@types/webgl2": "^0.0.6",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
     "eslint": "^7.30.0",
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "start": "grunt",
-    "test": "karma start karma.conf.js",
+    "test": "karma start karma.conf.js && npx tsc -noEmit test/types.ts",
     "lint": "eslint smartcrop.js test examples/slideshow.js examples/testbed.js examples/testsuite.js examples/smartcrop-debug.js"
   }
 }
