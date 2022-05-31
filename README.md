@@ -8,6 +8,9 @@ It can be used in the browser, in node or via a CLI.
 ![Example](https://29a.ch/sandbox/2014/smartcrop/example.jpg)
 Image: [https://www.flickr.com/photos/endogamia/5682480447/](https://www.flickr.com/photos/endogamia/5682480447) by N. Feans
 
+> **Note**
+> I'm currently working on a more advanced version of smartcrop.js based on machine learning. As part of that I'm looking for a large dataset of manually cropped images. If you know of such a dataset, please [let me know](https://29a.ch/about).
+
 ## Demos
 
 - [Smartcrop.js Test Suite](https://29a.ch/sandbox/2014/smartcrop/examples/testsuite.html), contains over 100 images, **heavy**.
