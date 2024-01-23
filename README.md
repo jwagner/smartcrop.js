@@ -1,6 +1,6 @@
 # smartcrop.js
 
-[![Build Status](https://travis-ci.org/jwagner/smartcrop.js.svg?branch=master)](https://travis-ci.org/jwagner/smartcrop.js)
+![example workflow](https://github.com/jwagner/smartcrop.js/actions/workflows/tests.yml/badge.svg)
 
 Smartcrop.js implements an algorithm to find good crops for images.
 It can be used in the browser, in node or via a CLI.
