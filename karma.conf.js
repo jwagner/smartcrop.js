@@ -6,31 +6,25 @@ module.exports = function(config) {
     sauceChromeLatest: {
       base: 'SauceLabs',
       browserName: 'chrome',
-      platform: 'Windows 10',
+      platform: 'Windows 11',
       version: 'latest'
     },
     sauceFirefoxLatest: {
       base: 'SauceLabs',
       browserName: 'firefox',
-      platform: 'Windows 10',
+      platform: 'Windows 11',
       version: 'latest'
-    },
-    sauceIE: {
-      base: 'SauceLabs',
-      browserName: 'internet explorer',
-      platform: 'Windows 8.1',
-      version: '11'
     },
     sauceEdge: {
       base: 'SauceLabs',
       browserName: 'MicrosoftEdge',
-      platform: 'Windows 10',
+      platform: 'Windows 11',
       version: 'latest'
     },
     sauceSafari: {
       base: 'SauceLabs',
       browserName: 'safari',
-      platform: 'OS X 10.11',
+      platform: 'macOS 13',
       version: 'latest'
     }
     // sl_firefox: {

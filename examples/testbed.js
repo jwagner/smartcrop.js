@@ -76,15 +76,14 @@
     var faceDetection = $('input[name=faceDetection]:checked', form).val();
     var analyzeOptions = analyze.bind(this, options);
 
-    if (faceDetection === 'tracking') {
-      faceDetectionTracking(options, analyzeOptions);
-    } else if (faceDetection === 'jquery') {
-      faceDetectionJquery(options, analyzeOptions);
-    } else if (faceDetection === 'opencv') {
+    switch (faceDetection) {
+    case 'opencv':
       faceDetectionOpenCV(options, analyzeOptions);
-    } else if (faceDetection === 'face-api') {
+      break;
+    case 'face-api':
       faceDetectionFaceAPI(options, analyzeOptions);
-    } else {
+      break;
+    default:
       analyzeOptions();
     }
   }
@@ -172,57 +171,6 @@
       faceCascade.delete();
       faces.delete();
       callback(options);
-    });
-  }
-
-  function faceDetectionTracking(options, callback) {
-    prescaleImage(img, 768, function(img, scale) {
-      var tracker = new tracking.ObjectTracker('face');
-      tracking.track(img, tracker);
-      tracker.on('track', function(event) {
-        console.log(
-          'tracking.js detected ' + event.data.length + ' faces',
-          event.data
-        );
-        options.boost = event.data.map(function(face) {
-          return {
-            x: face.x / scale,
-            y: face.y / scale,
-            width: face.width / scale,
-            height: face.height / scale,
-            weight: 1.0
-          };
-        });
-
-        callback(options);
-      });
-    });
-  }
-
-  function faceDetectionJquery(options, callback) {
-    $(img).faceDetection({
-      complete: function(faces) {
-        if (faces === false) {
-          return console.log('jquery.facedetection returned false');
-        }
-        console.log(
-          'jquery.facedetection detected ' + faces.length + ' faces',
-          faces
-        );
-        options.boost = Array.prototype.slice
-          .call(faces, 0)
-          .map(function(face) {
-            return {
-              x: face.x,
-              y: face.y,
-              width: face.width,
-              height: face.height,
-              weight: 1.0
-            };
-          });
-
-        callback(options);
-      }
     });
   }
 
