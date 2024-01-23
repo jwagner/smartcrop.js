@@ -1,0 +1,1 @@
+../node_modules/@vladmandic/face-api/dist/face-api.js
